@@ -1,8 +1,8 @@
 # Choisir une image Node.js de base
 FROM node:18
 
-# Créer et définir le répertoire de travail
-WORKDIR /app
+# Créer un répertoire de travail dans le conteneur
+WORKDIR /usr/src/app
 
 # Copier les fichiers package.json et package-lock.json
 COPY package*.json ./
