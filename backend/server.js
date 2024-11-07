@@ -42,6 +42,13 @@ app.use('/auth', authRoutes); // Route pour l'authentification
 
 console.log("Database URL:", process.env.DATABASE_URL);
 
+// Middleware de gestion d'erreur global
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ error: 'Une erreur serveur est survenue.' });
+});
+
+
 // Démarrer le serveur
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
