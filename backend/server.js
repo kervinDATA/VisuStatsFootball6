@@ -12,6 +12,8 @@ const factTeams3Routes = require('./routes/factTeams3Routes');
 const factTeams4Routes = require('./routes/factTeams4Routes');
 const factTeams5Routes = require('./routes/factTeams5Routes');
 const factTeams6Routes = require('./routes/factTeams6Routes');
+const venuesRoutes = require('./routes/venuesRoutes');
+const scoresRoutes = require('./routes/scoresRoutes');
 
 
 const authRoutes = require('./routes/authRoutes'); // Importer les routes d'authentification
@@ -26,6 +28,8 @@ app.use('/players', playerRoutes);
 app.use('/teams', teamRoutes); // Route pour les équipes
 app.use('/fixtures', fixtureRoutes);
 app.use('/seasons', seasonRoutes);
+app.use('/venues', venuesRoutes);
+app.use('/scores', scoresRoutes);
 
 // Route pour les statistiques d'équipe, sans paramètre dynamique dans app.use
 app.use('/teams', teamStatsRoutes);

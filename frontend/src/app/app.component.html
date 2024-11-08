@@ -12,7 +12,7 @@
     </div>
     <nav class="flex gap-2">
       <!-- Bouton "Register" visible si non connecté -->
-      <button *ngIf="!authService.isLoggedIn()" routerLink="/register" class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md">Register</button>
+      <button *ngIf="!authService.isLoggedIn()" (click)="goToRegister()" class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md">Register</button>
       
       <!-- Bouton "Login" visible si non connecté -->
       <button *ngIf="!authService.isLoggedIn()" (click)="login()" class="px-4 py-2 bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md">Login</button>

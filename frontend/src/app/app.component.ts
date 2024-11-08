@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common'; // Importer CommonModule pour *n
   standalone: true,
   imports: [RouterOutlet, CommonModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css']
 })
 export class AppComponent {
   title = 'frontend';
@@ -36,5 +36,10 @@ export class AppComponent {
     setTimeout(() => {
       this.notification = null;
     }, 3000); // Cache le message après 3 secondes
+  }
+
+  goToRegister() {
+    console.log("Navigating to register"); // Ajoute un message pour vérifier si la méthode est appelée
+    this.router.navigate(['/register']);
   }
 }

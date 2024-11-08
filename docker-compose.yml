@@ -8,3 +8,12 @@ services:
       - "5002:5000"
     env_file:
       - ./backend/.env
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:80"  # Le port 80 du conteneur Nginx sera mappé au port 4200 de la machine locale
+    depends_on:
+      - backend  # S'assurer que le backend est démarré avant le frontend
