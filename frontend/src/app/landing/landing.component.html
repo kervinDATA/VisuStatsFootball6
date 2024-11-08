@@ -1,0 +1,36 @@
+<!-- Wrapper principal pour couvrir toute la hauteur de l'écran -->
+<div class="min-h-screen flex flex-col">
+
+    <!-- Body - centré verticalement et horizontalement -->
+    <main class="flex-grow flex flex-col items-center justify-center mt-8 w-full px-4">
+        <div class="text-center mb-6 max-w-2xl">
+            <img src="assets/welcome-image.jpg" alt="Welcome Image" class="w-full max-w-md mb-4 mx-auto rounded-lg shadow-md">
+            <p class="text-lg font-semibold">Bienvenue sur VisuStatsFootball !</p>
+        </div>
+  
+        <!-- Navigation Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl">
+            <div routerLink="/teams" class="p-6 bg-white rounded shadow text-center cursor-pointer transition transform hover:scale-105 hover:shadow-lg">
+                <i class="fas fa-trophy text-blue-500 text-3xl mb-2"></i>
+                <h2 class="text-xl font-bold">Championnat et Équipes</h2>
+                <p>Explorez les équipes et les championnats disponibles.</p>
+            </div>
+            <div routerLink="/analysis" class="p-6 bg-white rounded shadow text-center cursor-pointer transition transform hover:scale-105 hover:shadow-lg">
+                <i class="fas fa-chart-line text-green-500 text-3xl mb-2"></i>
+                <h2 class="text-xl font-bold">Analyses du Site</h2>
+                <p>Accédez à des analyses détaillées et des visualisations.</p>
+            </div>
+            <div routerLink="/user-page" class="p-6 bg-white rounded shadow text-center cursor-pointer transition transform hover:scale-105 hover:shadow-lg">
+                <i class="fas fa-user text-purple-500 text-3xl mb-2"></i>
+                <h2 class="text-xl font-bold">Votre Page</h2>
+                <p>Gérez votre profil et vos préférences.</p>
+            </div>
+        </div>
+    </main>
+  
+    <!-- Footer -->
+    <footer class="text-center p-4 bg-gray-800 text-white w-full mt-auto">
+        <!-- Contenu du footer à compléter plus tard -->
+    </footer>
+  </div>
+  

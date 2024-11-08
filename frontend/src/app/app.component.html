@@ -1,0 +1,27 @@
+<!-- Zone de Notification -->
+<div *ngIf="notification" class="fixed top-4 right-4 bg-green-500 text-white p-2 rounded shadow-lg">
+    {{ notification }}
+  </div>
+
+
+<!-- Header et Contenu -->
+<header class="flex justify-between items-center p-4 bg-gray-800 text-white shadow-md w-full">
+    <div class="flex items-center">
+      <img src="assets/logo.png" alt="Logo" class="w-8 h-8 mr-2">
+      <h1 class="text-xl font-bold">VisuStatsFootball</h1>
+    </div>
+    <nav class="flex gap-2">
+      <!-- Bouton "Register" visible si non connecté -->
+      <button *ngIf="!authService.isLoggedIn()" routerLink="/register" class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md">Register</button>
+      
+      <!-- Bouton "Login" visible si non connecté -->
+      <button *ngIf="!authService.isLoggedIn()" (click)="login()" class="px-4 py-2 bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md">Login</button>
+      
+      <!-- Bouton "Logout" visible si connecté -->
+      <button *ngIf="authService.isLoggedIn()" (click)="logout()" class="px-4 py-2 bg-red-500 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md">Logout</button>
+    </nav>
+  </header>
+  
+  <router-outlet></router-outlet>
+  
+  
