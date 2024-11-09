@@ -1,14 +1,20 @@
 <h2>Page de Connexion</h2>
 <p>Formulaire de connexion pour les utilisateurs.</p>
 
+<!-- Afficher le message d'erreur si la connexion échoue -->
+<div *ngIf="errorMessage" class="text-red-500 mt-2">
+  {{ errorMessage }}
+</div>
+
 <!-- Formulaire de connexion -->
 <form (ngSubmit)="onLogin()">
-  <label for="username">Nom d'utilisateur :</label>
-  <input type="text" id="username" name="username" required class="border p-2 mb-4 block">
+  <label for="email">Email :</label>
+  <input type="text" id="email" [(ngModel)]="email" name="email" required class="border p-2 mb-4 block">
 
   <label for="password">Mot de passe :</label>
-  <input type="password" id="password" name="password" required class="border p-2 mb-4 block">
+  <input type="password" id="password" [(ngModel)]="password" name="password" required class="border p-2 mb-4 block">
 
   <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Se Connecter</button>
 </form>
+
 

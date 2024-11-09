@@ -15,7 +15,7 @@
       <button *ngIf="!authService.isLoggedIn()" (click)="goToRegister()" class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md">Register</button>
       
       <!-- Bouton "Login" visible si non connecté -->
-      <button *ngIf="!authService.isLoggedIn()" (click)="login()" class="px-4 py-2 bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md">Login</button>
+      <button *ngIf="!authService.isLoggedIn()" (click)="goToLogin()" class="px-4 py-2 bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md">Login</button>
       
       <!-- Bouton "Logout" visible si connecté -->
       <button *ngIf="authService.isLoggedIn()" (click)="logout()" class="px-4 py-2 bg-red-500 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md">Logout</button>

@@ -15,13 +15,24 @@ export class AppComponent {
   title = 'frontend';
   notification: string | null = null;
 
+  // Propriétés pour stocker l'email et le mot de passe
+  email: string = '';
+  password: string = '';
+
   constructor(public authService: AuthService, private router: Router) {}
 
   // Méthode pour gérer la connexion
   login() {
-    this.authService.login();
-    this.showNotification('Vous êtes connecté');
-    this.router.navigate(['/user-page']); // Redirige vers "Votre Page" après connexion
+    //this.authService.login(this.email, this.password).subscribe({
+      //next: (response) => {
+        //this.authService.storeToken(response.token); // Stocker le token
+        //this.showNotification('Vous êtes connecté');
+        //this.router.navigate(['/user-page']); // Redirige vers "Votre Page" après connexion
+      //},
+      //error: (err) => {
+        //console.error('Erreur de connexion:', err);
+      //}
+    //});
   }
 
   // Méthode pour gérer la déconnexion
@@ -41,5 +52,10 @@ export class AppComponent {
   goToRegister() {
     console.log("Navigating to register"); // Ajoute un message pour vérifier si la méthode est appelée
     this.router.navigate(['/register']);
+  }
+
+  // Nouvelle méthode pour naviguer vers la page de connexion
+  goToLogin() {
+    this.router.navigate(['/login']);
   }
 }

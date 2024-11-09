@@ -1,3 +1,25 @@
 <h2>Page d'Inscription</h2>
 <p>Formulaire d'inscription pour les utilisateurs.</p>
 
+<!-- Formulaire de connexion -->
+<form (ngSubmit)="onRegister()">
+  <label for="email">Email :</label>
+  <input type="email" id="email" [(ngModel)]="email" name="email" required class="border p-2 mb-4 block">
+
+  <label for="password">Mot de passe :</label>
+  <input type="password" id="password" [(ngModel)]="password" name="password" required class="border p-2 mb-4 block">
+
+  <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">S'inscrire</button>
+</form>
+
+<!-- Afficher les erreurs -->
+<div *ngIf="errorMessage" class="text-red-500 mt-2">
+  {{ errorMessage }}
+</div>
+
+<!-- Afficher le message de succès -->
+<div *ngIf="successMessage" class="text-green-500 mt-2">
+    {{ successMessage }}
+</div>
+
+

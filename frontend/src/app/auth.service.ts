@@ -1,23 +1,52 @@
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { catchError } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private loggedIn = false; // Défaut : non connecté
+  private apiUrl = 'http://localhost:5002/auth'; // URL de l'API
 
+  constructor(private http: HttpClient) {}
+
+  // Vérifie si l'utilisateur est connecté
   isLoggedIn(): boolean {
-    return this.loggedIn;
+    return !!localStorage.getItem('token'); // Vérifie si le token existe dans localStorage
   }
 
-  login(): void {
-    this.loggedIn = true;
-    // Dans un vrai contexte, cette méthode pourrait inclure une requête API
+  // Connexion de l'utilisateur
+  login(email: string, password: string) {
+    return this.http.post<{ token: string; user: any }>(`${this.apiUrl}/login`, { email, password }).pipe(
+      catchError((error) => {
+        console.error('Login error', error);
+        return throwError(error);
+      })
+    );
   }
 
+  // Stocker le token dans localStorage
+  storeToken(token: string) {
+    localStorage.setItem('token', token);
+  }
+
+  // Déconnexion de l'utilisateur
   logout(): void {
-    this.loggedIn = false;
+    localStorage.removeItem('token'); // Retire le token du localStorage
   }
+
+  register(email: string, password: string) {
+    return this.http.post<{ message: string }>('http://localhost:5002/auth/register', { email, password }).pipe(
+      catchError((error) => {
+        console.error('Erreur d\'inscription', error);
+        return throwError(error);
+      })
+    );
+  }
+
+
 }
+
 
 
