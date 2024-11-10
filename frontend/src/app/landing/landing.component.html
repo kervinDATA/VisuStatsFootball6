@@ -4,7 +4,7 @@
     <!-- Body - centré verticalement et horizontalement -->
     <main class="flex-grow flex flex-col items-center justify-center mt-8 w-full px-4">
         <div class="text-center mb-6 max-w-2xl">
-            <img src="assets/welcome-image.jpg" alt="Welcome Image" class="w-full max-w-md mb-4 mx-auto rounded-lg shadow-md">
+            <img *ngIf="imageUrl" [src]="imageUrl" alt="Welcome Image" class="w-full max-w-md mb-4 mx-auto rounded-lg shadow-md">
             <p class="text-lg font-semibold">Bienvenue sur VisuStatsFootball !</p>
         </div>
   
