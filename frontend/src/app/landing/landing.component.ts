@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { ImageService } from '../image.service'; // Assurez-vous que le chemin est correct
 import { CommonModule } from '@angular/common'; 
 

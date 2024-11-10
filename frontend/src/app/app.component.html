@@ -7,7 +7,7 @@
 <!-- Header et Contenu -->
 <header class="flex justify-between items-center p-4 bg-gray-800 text-white shadow-md w-full">
     <div class="flex items-center">
-      <img src="assets/logo.png" alt="Logo" class="w-8 h-8 mr-2">
+      <img *ngIf="imageUrl" [src]="imageUrl" alt="Logo" class="w-12 h-12 mr-2">
       <h1 class="text-xl font-bold">VisuStatsFootball</h1>
     </div>
     <nav class="flex gap-2">

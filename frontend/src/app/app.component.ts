@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common'; // Importer CommonModule pour *ngIf
+import { ImageService } from './image.service';
 
 @Component({
   selector: 'app-root',
@@ -14,12 +15,29 @@ import { CommonModule } from '@angular/common'; // Importer CommonModule pour *n
 export class AppComponent {
   title = 'frontend';
   notification: string | null = null;
+  imageUrl: string | undefined; // Variable pour l'URL du logo
 
   // Propriétés pour stocker l'email et le mot de passe
   email: string = '';
   password: string = '';
 
-  constructor(public authService: AuthService, private router: Router) {}
+  constructor(public authService: AuthService, private router: Router, private imageService: ImageService) {}
+
+  ngOnInit(): void {
+    this.loadLogo();
+  }
+
+  loadLogo(): void {
+    this.imageService.getImageUrl('logo_VisuStatsFootball.jpg').subscribe(
+      (response) => {
+        this.imageUrl = response.url;
+      },
+      (error) => {
+        console.error("Erreur de chargement du logo :", error);
+      }
+    );
+  }
+  
 
   // Méthode pour gérer la connexion
   login() {

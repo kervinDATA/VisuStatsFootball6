@@ -1,36 +1,37 @@
-<!-- Wrapper principal pour couvrir toute la hauteur de l'écran -->
-<div class="min-h-screen flex flex-col">
+<!-- Wrapper principal avec un fond dégradé -->
+<div class="min-h-screen flex flex-col bg-gradient-to-br from-gray-800 via-gray-700 to-gray-600 text-white">
 
-    <!-- Body - centré verticalement et horizontalement -->
-    <main class="flex-grow flex flex-col items-center justify-center mt-8 w-full px-4">
-        <div class="text-center mb-6 max-w-2xl">
-            <img *ngIf="imageUrl" [src]="imageUrl" alt="Welcome Image" class="w-full max-w-md mb-4 mx-auto rounded-lg shadow-md">
-            <p class="text-lg font-semibold">Bienvenue sur VisuStatsFootball !</p>
+    <!-- Bannière de Bienvenue -->
+    <main class="flex-grow flex flex-col items-center w-full px-4 text-center pt-24 pb-8">
+        <div class="text-center w-full max-w-3xl bg-gray-800 bg-opacity-80 rounded-lg p-6 shadow-lg">
+            <img *ngIf="imageUrl" [src]="imageUrl" alt="Welcome Image" class="w-full max-w-sm mb-4 mx-auto rounded-lg shadow-md">
+            <p class="text-4xl font-bold text-yellow-400 mb-3">Bienvenue sur VisuStatsFootball !</p>
+            <p class="text-lg text-gray-300">Explorez les statistiques, visualisez les données, amusez-vous!</p>
         </div>
-  
-        <!-- Navigation Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-5xl">
-            <div routerLink="/teams" class="p-6 bg-white rounded shadow text-center cursor-pointer transition transform hover:scale-105 hover:shadow-lg">
-                <i class="fas fa-trophy text-blue-500 text-3xl mb-2"></i>
-                <h2 class="text-xl font-bold">Championnat et Équipes</h2>
-                <p>Explorez les équipes et les championnats disponibles.</p>
+
+        <!-- Section des Cartes de Navigation -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 w-full max-w-5xl px-4 mt-24">
+            <div routerLink="/teams" class="flex flex-col items-center justify-center p-6 bg-gradient-to-r from-yellow-500 to-orange-600 text-white rounded-xl shadow-2xl transform transition-transform duration-500 hover:scale-105">
+                <i class="fas fa-trophy text-5xl mb-4"></i>
+                <h2 class="text-2xl font-bold mb-2">Championnat et Équipes</h2>
+                <p class="text-center text-lg">Explorez les équipes et le championnat.</p>
             </div>
-            <div routerLink="/analysis" class="p-6 bg-white rounded shadow text-center cursor-pointer transition transform hover:scale-105 hover:shadow-lg">
-                <i class="fas fa-chart-line text-green-500 text-3xl mb-2"></i>
-                <h2 class="text-xl font-bold">Analyses du Site</h2>
-                <p>Accédez à des analyses détaillées et des visualisations.</p>
+            <div routerLink="/analysis" class="flex flex-col items-center justify-center p-6 bg-gradient-to-r from-green-500 to-teal-600 text-white rounded-xl shadow-2xl transform transition-transform duration-500 hover:scale-105">
+                <i class="fas fa-chart-line text-5xl mb-4"></i>
+                <h2 class="text-2xl font-bold mb-2">Analyses du Site</h2>
+                <p class="text-center text-lg">Accédez à des analyses détaillées et des visualisations.</p>
             </div>
-            <div routerLink="/user-page" class="p-6 bg-white rounded shadow text-center cursor-pointer transition transform hover:scale-105 hover:shadow-lg">
-                <i class="fas fa-user text-purple-500 text-3xl mb-2"></i>
-                <h2 class="text-xl font-bold">Votre Page</h2>
-                <p>Gérez votre profil et vos préférences.</p>
+            <div routerLink="/user-page" class="flex flex-col items-center justify-center p-6 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-xl shadow-2xl transform transition-transform duration-500 hover:scale-105">
+                <i class="fas fa-user text-5xl mb-4"></i>
+                <h2 class="text-2xl font-bold mb-2">Votre Page</h2>
+                <p class="text-center text-lg">Créez et accédez à vos analyses.</p>
             </div>
         </div>
     </main>
-  
+
     <!-- Footer -->
-    <footer class="text-center p-4 bg-gray-800 text-white w-full mt-auto">
-        <!-- Contenu du footer à compléter plus tard -->
+    <footer class="text-center p-2 bg-gray-800 text-gray-300 w-full">
+        <p>© 2024 VisuStatsFootball - Tous droits réservés.</p>
     </footer>
-  </div>
-  
+</div>
+
