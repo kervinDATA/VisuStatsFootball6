@@ -5,7 +5,6 @@ import { RouterModule, Router } from '@angular/router';
 import { TeamService } from '../services/team.service';
 import { SeasonService } from '../services/season.service';
 
-
 @Component({
   selector: 'app-teams',
   standalone: true,
@@ -14,11 +13,11 @@ import { SeasonService } from '../services/season.service';
   styleUrls: ['./teams.component.css']
 })
 export class TeamsComponent implements OnInit {
-    // Propriétés d'état pour la sélection
-    isSeasonSelected: boolean = false;
-    isTeamSelected: boolean = false;
+  // Propriétés d'état pour la sélection
+  isSeasonSelected: boolean = false;
+  isTeamSelected: boolean = false;
 
-    // Propriétés pour stocker les informations sélectionnées
+  // Propriétés pour stocker les informations sélectionnées
   selectedSeasonName: string = '';
   selectedTeamName: string = '';
   seasonImageUrl: string = '';
@@ -26,11 +25,11 @@ export class TeamsComponent implements OnInit {
   selectedTeamSeason: string = '';
 
   // Listes de données
-  seasons: string[] = [];
+  seasons: { season_id: number, season_name: string }[] = [];
   teams: any[] = [];
+  selectedSeasonStats: any;
 
   constructor(private teamService: TeamService, private seasonService: SeasonService) {}
-
 
   ngOnInit() {
     this.loadSeasons();
@@ -43,8 +42,8 @@ export class TeamsComponent implements OnInit {
   }
 
   loadSeasons() {
-    this.seasonService.getSeasons().subscribe((data: { season_name: string }[]) => {
-      this.seasons = data.map((season: { season_name: string }) => season.season_name);
+    this.seasonService.getSeasons().subscribe((data: { season_id: number, season_name: string }[]) => {
+      this.seasons = data;
     });
   }
 
@@ -54,32 +53,41 @@ export class TeamsComponent implements OnInit {
     });
   }
 
-  loadTeamStats() {
-    // Logique de chargement des stats d'équipe
-  }
-
-
-  selectSeason(season: string) {
+  selectSeason(seasonId: number) {
     this.isSeasonSelected = true;
     this.isTeamSelected = false;
-    this.selectedSeasonName = season;
-    this.loadSeasonData(season); // Charge les données de la saison
+    const selectedSeason = this.seasons.find(season => season.season_id === seasonId);
+    this.selectedSeasonName = selectedSeason ? selectedSeason.season_name : '';
+
+    // Appel avec conversion en string si requis
+    this.loadSeasonData(String(seasonId));
   }
-  
+
   selectTeam(team: any) {
     this.isSeasonSelected = false;
     this.isTeamSelected = true;
     this.selectedTeamName = team.name;
-    this.teamImageUrl = team.image; // Si l'image de l'équipe est disponible dans les données
-    this.loadTeamData(team.id); // Charge les données de l'équipe
+    this.teamImageUrl = team.image;
+    this.loadTeamData(team.id);
   }
-  
-  loadSeasonData(season: string) {
-    // Appel au service pour récupérer les données spécifiques à cette saison
+
+  loadSeasonData(seasonId: string) {
+    this.seasonService.getSeasonStats(seasonId).subscribe(data => {
+      this.selectedSeasonStats = data;
+      console.log("Statistiques de la saison :", data);
+    });
+
+    // Charger le classement pour la saison sélectionnée
+    this.seasonService.getSeasonStandings(seasonId).subscribe(standings => {
+      console.log("Classement reçu :", standings);
+      this.selectedSeasonStats = {
+        ...this.selectedSeasonStats,
+        classement: standings
+      };
+    });
   }
-  
+
   loadTeamData(teamId: number) {
-    // Appel au service pour récupérer les données spécifiques à cette équipe
+    // Ici, ajoutez la logique pour charger les données spécifiques à une équipe
   }
-  
 }
