@@ -74,6 +74,35 @@ router.get('/stats', async (req, res) => {
 });
 
 
+// Route pour obtenir le nombre de buts par tranche de 15 minutes pour une saison spécifique
+router.get('/goals-per-15min', async (req, res) => {
+  const { season_names } = req.query;
+
+  if (!season_names) {
+    return res.status(400).json({ message: 'Veuillez fournir une saison' });
+  }
+
+  try {
+    const query = `
+      SELECT 
+        SUM(ft."0-15_count") AS goals_0_15,
+        SUM(ft."15-30_count") AS goals_15_30,
+        SUM(ft."30-45_count") AS goals_30_45,
+        SUM(ft."45-60_count") AS goals_45_60,
+        SUM(ft."60-75_count") AS goals_60_75,
+        SUM(ft."75-90_count") AS goals_75_90
+      FROM dev_app_foot.fact_teams3 ft
+      JOIN dev_app_foot.dim_seasons ds ON ft.season_id = ds.season_id
+      WHERE ds.season_name = $1
+    `;
+    const result = await pool.query(query, [season_names]);
+
+    res.json(result.rows[0]);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des buts par tranche de 15 minutes", error.stack);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+});
 
 
 

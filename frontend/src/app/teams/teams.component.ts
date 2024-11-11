@@ -29,6 +29,11 @@ export class TeamsComponent implements OnInit {
   teams: any[] = [];
   selectedSeasonStats: any;
 
+  // Propriété pour les statisques
+  totalGoals: number | null = null;
+  intervalGoals: any = {};
+  penaltyStats: any = {};
+
   constructor(private teamService: TeamService, private seasonService: SeasonService) {}
 
   ngOnInit() {
@@ -71,11 +76,28 @@ export class TeamsComponent implements OnInit {
     this.loadTeamData(team.id);
   }
 
+
   loadSeasonData(seasonId: string) {
     this.seasonService.getSeasonStats(seasonId).subscribe(data => {
       this.selectedSeasonStats = data;
       console.log("Statistiques de la saison :", data);
     });
+
+    // Charger le nombre total de buts
+    this.seasonService.getTotalGoals(this.selectedSeasonName).subscribe(data => {
+      this.totalGoals = data.total_goals;
+    });
+
+    // Charger les buts par intervalle de temps pour la saison sélectionnée
+    this.seasonService.getGoalsByInterval(this.selectedSeasonName).subscribe(data => {
+      this.intervalGoals = data;
+    });
+
+    // Charger les statistiques de pénalités pour la saison sélectionnée
+    this.seasonService.getPenaltyStats(this.selectedSeasonName).subscribe(data => {
+      this.penaltyStats = data;
+    });
+
 
     // Charger le classement pour la saison sélectionnée
     this.seasonService.getSeasonStandings(seasonId).subscribe(standings => {

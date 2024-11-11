@@ -72,6 +72,35 @@ router.get('/stats', async (req, res) => {
       res.status(500).json({ message: 'Erreur serveur', error: error.message });
     }
   });
+
+
+// Route pour obtenir le nombre total de buts d'une ou plusieurs saisons spécifiques
+router.get('/total-goals', async (req, res) => {
+  const { season_names } = req.query;
+
+  if (!season_names) {
+    return res.status(400).json({ message: 'Veuillez fournir une ou plusieurs saisons' });
+  }
+
+  // Gérer un seul nom de saison ou plusieurs noms de saisons
+  const seasonList = Array.isArray(season_names) ? season_names : [season_names];
+  const placeholders = seasonList.map((_, i) => `$${i + 1}`).join(', ');
+
+  try {
+    const query = `
+      SELECT SUM(ft.all_count) AS total_goals
+      FROM dev_app_foot.fact_teams4 ft
+      JOIN dev_app_foot.dim_seasons ds ON ft.season_id = ds.season_id
+      WHERE ft.type_name = 'Goals' AND ds.season_name IN (${placeholders})
+    `;
+    const result = await pool.query(query, seasonList);
+
+    res.json({ total_goals: result.rows[0].total_goals });
+  } catch (error) {
+    console.error("Erreur lors de la récupération du nombre total de buts", error.stack);
+    res.status(500).json({ message: 'Erreur serveur' });
+  }
+});
   
 
 

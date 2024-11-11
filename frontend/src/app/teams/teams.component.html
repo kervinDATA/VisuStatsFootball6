@@ -32,39 +32,56 @@
     <main class="flex-grow p-6">
 
     <!-- Section Saison -->
-    <section *ngIf="isSeasonSelected">
+    <section *ngIf="isSeasonSelected" class="text-center">
         <div class="text-center bg-gray-200 rounded-lg p-6 mb-6 shadow-md">
-        <img [src]="seasonImageUrl" alt="Image de la saison" class="mx-auto mb-4 w-1/2 rounded-lg shadow-md">
-        <p class="text-3xl font-bold mb-2">{{ selectedSeasonName }}</p>
-        <p class="text-gray-600">Détails de la saison</p>
+          <img [src]="seasonImageUrl" alt="Image de la saison" class="mx-auto mb-4 w-1/2 rounded-lg shadow-md">
+          <p class="text-3xl font-bold mb-2">{{ selectedSeasonName }}</p>
+          <p class="text-gray-600">Détails de la saison</p>
         </div>
-        <div class="flex gap-6">
-        <!-- Classement à gauche -->
-        <div class="w-1/2 bg-white rounded-lg shadow-md p-4">
+
+        <!-- Classement centré -->
+        <div class="w-full max-w-lg mx-auto bg-white rounded-lg shadow-md p-4 mb-6">
             <h3 class="text-xl font-semibold mb-4">Classement</h3>
             <ul>
-                <li *ngFor="let team of selectedSeasonStats.classement" class="mb-2">
-                    {{ team.position }} - {{ team.team_name }} : {{ team.points }} points
-                </li>
+              <li *ngFor="let team of selectedSeasonStats.classement" class="mb-2">
+                {{ team.position }} - {{ team.team_name }} : {{ team.points }} points
+              </li>
             </ul>
-        </div>
-        <!-- Cartes d'information à droite -->
-        <div class="w-1/2 grid grid-cols-2 gap-4">
+          </div>
+
+        <!-- Cartes d'information sur la saison -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+            <div class="bg-blue-500 text-white p-4 rounded-lg shadow-md">
+                Total de buts : {{ totalGoals  }}
+            </div>
             <div class="bg-indigo-500 text-white p-4 rounded-lg shadow-md">
-            Meilleur Buteur : {{ selectedSeasonStats.topScorer }}
+                Buts durant les 15 premières minutes : {{ intervalGoals?.goals_0_15 }}
             </div>
+            <div class="bg-purple-500 text-white p-4 rounded-lg shadow-md">
+                Buts entre la 15ème et 30ème minute : {{ intervalGoals?.goals_15_30 }}
+            </div>
+        
             <div class="bg-green-500 text-white p-4 rounded-lg shadow-md">
-            Meilleur Passeur : {{ selectedSeasonStats.topAssist }}
+                Buts entre la 30ème et 45ème minute : {{ intervalGoals?.goals_30_45 }}
             </div>
-            <div class="bg-red-500 text-white p-4 rounded-lg shadow-md">
-            Cartons Jaunes : {{ selectedSeasonStats.yellowCards }}
+            <div class="bg-teal-500 text-white p-4 rounded-lg shadow-md">
+                Buts entre la 45ème et 60ème minute: {{ intervalGoals?.goals_45_60 }}
             </div>
             <div class="bg-yellow-500 text-white p-4 rounded-lg shadow-md">
-            Cartons Rouges : {{ selectedSeasonStats.redCards }}
+                Buts entre la 60ème et 75ème minute : {{ intervalGoals?.goals_60_75 }}
             </div>
-            <!-- Autres cartes... -->
+        
+            <div class="bg-orange-500 text-white p-4 rounded-lg shadow-md">
+                Buts entre la 75ème et 90ème minute : {{ intervalGoals?.goals_75_90 }}
+            </div>
+            <div class="bg-red-500 text-white p-4 rounded-lg shadow-md">
+                Total penalties tirés  : {{ penaltyStats?.penalties_total }}
+            </div>
+            <div class="bg-pink-500 text-white p-4 rounded-lg shadow-md">
+                Buts sur penalties : {{ penaltyStats?.penalties_scored }}
+            </div>
         </div>
-        </div>
+        
     </section>
   
   

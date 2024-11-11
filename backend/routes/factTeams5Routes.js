@@ -70,6 +70,33 @@ router.get('/stats', async (req, res) => {
       res.status(500).json({ message: 'Erreur serveur', error: error.message });
     }
   });
+
+
+  // Route pour obtenir le total des pénalités pour une saison spécifique
+  router.get('/penalty-stats', async (req, res) => {
+    const { season_names } = req.query;
+
+    if (!season_names) {
+      return res.status(400).json({ message: 'Veuillez fournir une saison' });
+    }
+
+    try {
+      const query = `
+        SELECT 
+          SUM(ft.total) AS penalties_total,
+          SUM(ft.scored) AS penalties_scored
+        FROM dev_app_foot.fact_teams5 ft
+        JOIN dev_app_foot.dim_seasons ds ON ft.season_id = ds.season_id
+        WHERE ft.type_name = 'Penalties' AND ds.season_name = $1
+      `;
+      const result = await pool.query(query, [season_names]);
+
+      res.json(result.rows[0]);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des statistiques des pénalités", error.stack);
+      res.status(500).json({ message: 'Erreur serveur' });
+    }
+  });
   
 
 
