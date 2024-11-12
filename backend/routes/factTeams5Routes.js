@@ -72,7 +72,7 @@ router.get('/stats', async (req, res) => {
   });
 
 
-  // Route pour obtenir le total des pénalités pour une saison spécifique
+  // Route pour obtenir le total des penalties et le nombre de but sur penalties pour une saison spécifique
   router.get('/penalty-stats', async (req, res) => {
     const { season_names } = req.query;
 

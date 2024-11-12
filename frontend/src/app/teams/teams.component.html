@@ -34,7 +34,7 @@
     <!-- Section Saison -->
     <section *ngIf="isSeasonSelected" class="text-center">
         <div class="text-center bg-gray-200 rounded-lg p-6 mb-6 shadow-md">
-          <img [src]="seasonImageUrl" alt="Image de la saison" class="mx-auto mb-4 w-1/2 rounded-lg shadow-md">
+            <img *ngIf="imageUrl" [src]="imageUrl" alt="Logo Scottish Premiership" class="mx-auto mb-4 w-1/3 rounded-lg shadow-md">
           <p class="text-3xl font-bold mb-2">{{ selectedSeasonName }}</p>
           <p class="text-gray-600">Détails de la saison</p>
         </div>

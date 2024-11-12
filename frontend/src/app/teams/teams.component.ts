@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
 import { TeamService } from '../services/team.service';
 import { SeasonService } from '../services/season.service';
+import { ImageService } from '../image.service';
 
 @Component({
   selector: 'app-teams',
@@ -34,11 +35,14 @@ export class TeamsComponent implements OnInit {
   intervalGoals: any = {};
   penaltyStats: any = {};
 
-  constructor(private teamService: TeamService, private seasonService: SeasonService) {}
+  imageUrl: string | undefined;
+
+  constructor(private teamService: TeamService, private seasonService: SeasonService, private imageService: ImageService) {}
 
   ngOnInit() {
     this.loadSeasons();
     this.loadTeams();
+    this.loadImage();
   }
 
   selectFilter(type: 'saison' | 'equipe') {
@@ -66,6 +70,7 @@ export class TeamsComponent implements OnInit {
 
     // Appel avec conversion en string si requis
     this.loadSeasonData(String(seasonId));
+
   }
 
   selectTeam(team: any) {
@@ -93,7 +98,7 @@ export class TeamsComponent implements OnInit {
       this.intervalGoals = data;
     });
 
-    // Charger les statistiques de pénalités pour la saison sélectionnée
+    // Charger les statistiques de penalties pour la saison sélectionnée
     this.seasonService.getPenaltyStats(this.selectedSeasonName).subscribe(data => {
       this.penaltyStats = data;
     });
@@ -108,6 +113,18 @@ export class TeamsComponent implements OnInit {
       };
     });
   }
+
+  loadImage(): void {
+    this.imageService.getImageUrl('logo_scottish_premiership.jpg').subscribe(
+      (response) => {
+        this.imageUrl = response.url;
+      },
+      (error) => {
+        console.error('Erreur de chargement de l\'image:', error);
+      }
+    );
+  }
+
 
   loadTeamData(teamId: number) {
     // Ici, ajoutez la logique pour charger les données spécifiques à une équipe
