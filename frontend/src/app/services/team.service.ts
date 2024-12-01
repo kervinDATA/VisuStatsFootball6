@@ -18,3 +18,4 @@ export class TeamService {
     return this.http.get<any>(`${this.baseUrl}/${teamId}/stats`, { params: { season } });
   }
 }
+

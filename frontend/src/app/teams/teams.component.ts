@@ -36,6 +36,8 @@ export class TeamsComponent implements OnInit {
   penaltyStats: any = {};
 
   imageUrl: string | undefined;
+  logoVisuStatsUrl: string | undefined;
+  welcomeImageUrl: string | undefined;
 
   constructor(private teamService: TeamService, private seasonService: SeasonService, private imageService: ImageService) {}
 
@@ -123,6 +125,24 @@ export class TeamsComponent implements OnInit {
         console.error('Erreur de chargement de l\'image:', error);
       }
     );
+
+    this.imageService.getImageUrl('logo_VisuStatsFootball.jpg').subscribe(
+      (response) => {
+        this.logoVisuStatsUrl = response.url;
+      },
+      (error) => {
+        console.error('Erreur de chargement du logo VisuStatsFootball:', error);
+      }
+    );
+
+    this.imageService.getImageUrl('analyste_stade.png').subscribe(
+      (response) => {
+        this.welcomeImageUrl = response.url;
+      },
+      (error) => {
+        console.error('Erreur de chargement de l\'image d\'accueil:', error);
+      }
+    );
   }
 
 
@@ -130,3 +150,4 @@ export class TeamsComponent implements OnInit {
     // Ici, ajoutez la logique pour charger les données spécifiques à une équipe
   }
 }
+
