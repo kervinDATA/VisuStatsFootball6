@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterModule, Router } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { TeamService } from '../services/team.service';
 import { SeasonService } from '../services/season.service';
 import { ImageService } from '../image.service';
@@ -23,23 +23,30 @@ export class TeamsComponent implements OnInit {
   selectedTeamName: string = '';
   seasonImageUrl: string = '';
   teamImageUrl: string = '';
-  selectedTeamSeason: string = '';
+  selectedTeamDetails: any = null; // Stocke les détails d'une équipe sélectionnée
+  selectedTeamStanding: any = null; // Classement de l'équipe sélectionnée pour une saison
+  standingsBySeason: any[] = []; // Stocker les standings pour toutes les saisons
 
   // Listes de données
   seasons: { season_id: number, season_name: string }[] = [];
   teams: any[] = [];
   selectedSeasonStats: any;
 
-  // Propriété pour les statisques
+  // Propriétés pour les statistiques
   totalGoals: number | null = null;
   intervalGoals: any = {};
   penaltyStats: any = {};
 
+  // Images
   imageUrl: string | undefined;
   logoVisuStatsUrl: string | undefined;
   welcomeImageUrl: string | undefined;
 
-  constructor(private teamService: TeamService, private seasonService: SeasonService, private imageService: ImageService) {}
+  constructor(
+    private teamService: TeamService,
+    private seasonService: SeasonService,
+    private imageService: ImageService
+  ) {}
 
   ngOnInit() {
     this.loadSeasons();
@@ -70,9 +77,7 @@ export class TeamsComponent implements OnInit {
     const selectedSeason = this.seasons.find(season => season.season_id === seasonId);
     this.selectedSeasonName = selectedSeason ? selectedSeason.season_name : '';
 
-    // Appel avec conversion en string si requis
     this.loadSeasonData(String(seasonId));
-
   }
 
   selectTeam(team: any) {
@@ -80,39 +85,94 @@ export class TeamsComponent implements OnInit {
     this.isTeamSelected = true;
     this.selectedTeamName = team.name;
     this.teamImageUrl = team.image;
-    this.loadTeamData(team.id);
+    this.selectedTeamDetails = null;
+    this.standingsBySeason = []; // Réinitialisez la liste
+  
+    // Récupérer les détails de l'équipe
+    this.teamService.getTeamDetails(team.team_id).subscribe({
+      next: (details) => {
+        console.log('Détails de l\'équipe récupérés :', details);
+        this.selectedTeamDetails = details;
+  
+        // Charger le classement pour toutes les saisons
+        this.teamService.getStandingsForAllSeasons(team.team_id).subscribe({
+          next: (standings) => {
+            console.log('Classements récupérés :', standings);
+            this.standingsBySeason = standings;
+          },
+          error: (err) => {
+            console.error('Erreur lors de la récupération des standings :', err);
+          }
+        });
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des détails de l\'équipe :', err);
+      }
+    });
+  }
+  
+  loadStandingsForTeam(teamId: number) {
+    this.seasons.forEach((season) => {
+      this.teamService.getTeamStandingForSeason(teamId, season.season_id).subscribe({
+        next: (standing) => {
+          if (standing && standing.position !== undefined) {
+            this.standingsBySeason.push({
+              season_name: season.season_name,
+              position: standing.position,
+              points: standing.points,
+            });
+          }
+        },
+        error: (err) => {
+          console.error(`Erreur lors du chargement du classement pour la saison ${season.season_name} :`, err);
+        }
+      });
+    });
   }
 
 
   loadSeasonData(seasonId: string) {
     this.seasonService.getSeasonStats(seasonId).subscribe(data => {
       this.selectedSeasonStats = data;
-      console.log("Statistiques de la saison :", data);
+      console.log('Statistiques de la saison :', data);
     });
 
-    // Charger le nombre total de buts
+    // Charger d'autres statistiques de saison
     this.seasonService.getTotalGoals(this.selectedSeasonName).subscribe(data => {
       this.totalGoals = data.total_goals;
     });
 
-    // Charger les buts par intervalle de temps pour la saison sélectionnée
     this.seasonService.getGoalsByInterval(this.selectedSeasonName).subscribe(data => {
       this.intervalGoals = data;
     });
 
-    // Charger les statistiques de penalties pour la saison sélectionnée
     this.seasonService.getPenaltyStats(this.selectedSeasonName).subscribe(data => {
       this.penaltyStats = data;
     });
 
-
-    // Charger le classement pour la saison sélectionnée
     this.seasonService.getSeasonStandings(seasonId).subscribe(standings => {
-      console.log("Classement reçu :", standings);
+      console.log('Classement reçu :', standings);
       this.selectedSeasonStats = {
         ...this.selectedSeasonStats,
         classement: standings
       };
+    });
+  }
+
+  loadTeamStanding(teamId: number, seasonId: number) {
+    if (!teamId || !seasonId) {
+      console.warn("Team ID ou Season ID manquant.");
+      return;
+    }
+  
+    this.teamService.getTeamStats(teamId, String(seasonId)).subscribe({
+      next: (data) => {
+        console.log('Classement de l\'équipe pour la saison récupéré :', data);
+        this.selectedTeamStanding = data; // Stocker les données reçues
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération du classement de l\'équipe :', err);
+      }
     });
   }
 
@@ -122,7 +182,7 @@ export class TeamsComponent implements OnInit {
         this.imageUrl = response.url;
       },
       (error) => {
-        console.error('Erreur de chargement de l\'image:', error);
+        console.error('Erreur de chargement de l\'image :', error);
       }
     );
 
@@ -131,7 +191,7 @@ export class TeamsComponent implements OnInit {
         this.logoVisuStatsUrl = response.url;
       },
       (error) => {
-        console.error('Erreur de chargement du logo VisuStatsFootball:', error);
+        console.error('Erreur de chargement du logo VisuStatsFootball :', error);
       }
     );
 
@@ -140,14 +200,9 @@ export class TeamsComponent implements OnInit {
         this.welcomeImageUrl = response.url;
       },
       (error) => {
-        console.error('Erreur de chargement de l\'image d\'accueil:', error);
+        console.error('Erreur de chargement de l\'image d\'accueil :', error);
       }
     );
   }
 
-
-  loadTeamData(teamId: number) {
-    // Ici, ajoutez la logique pour charger les données spécifiques à une équipe
-  }
 }
-
