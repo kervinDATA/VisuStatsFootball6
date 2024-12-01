@@ -59,4 +59,24 @@ router.get('/:id/details', async (req, res) => {
   }
 });
 
+// Route pour récupérer l'image d'une équipe
+router.get('/:id/image', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const query = 'SELECT image_path FROM dev_app_foot.dim_teams WHERE team_id = $1';
+    const result = await pool.query(query, [id]);
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ message: "Équipe non trouvée." });
+    }
+
+    const imagePath = result.rows[0].image_path;
+    res.json({ image: imagePath });
+  } catch (error) {
+    console.error("Erreur lors de la récupération de l'image de l'équipe :", error.stack);
+    res.status(500).json({ message: "Erreur serveur lors de la récupération de l'image de l'équipe." });
+  }
+});
+
+
 module.exports = router;

@@ -91,13 +91,36 @@
     <!-- Section Équipe -->
     <section *ngIf="isTeamSelected">
       <div class="text-center bg-gray-200 rounded-lg p-6 mb-6 shadow-md">
-        <img [src]="teamImageUrl" alt="Image de l'équipe" class="mx-auto mb-4 w-1/2 rounded-lg shadow-md">
         <p class="text-3xl font-bold mb-2">{{ selectedTeamName }}</p>
         <p class="text-gray-600">Fondé en : {{ selectedTeamDetails?.founded }}</p>
       </div>
-
+    
+      <div class="flex flex-wrap justify-center items-start gap-20 mb-6">
+        <!-- Image de l'équipe -->
+        <div class="flex-shrink-0">
+          <img 
+            [src]="teamImageUrl || 'assets/images/default-team.png'" 
+            alt="Image de l'équipe" 
+            class="w-48 h-auto rounded-lg shadow-md"> <!-- Taille de l'image augmentée -->
+        </div>
+      
+        <!-- Carte Classement -->
+        <div *ngIf="standingsBySeason.length > 0">
+          <div class="w-120 bg-blue-500 text-white rounded-lg shadow-md p-4">
+            <h3 class="text-xl font-semibold mb-3 text-center">Classement pour toutes les saisons</h3>
+            <ul>
+              <li *ngFor="let standing of standingsBySeason" class="mb-3">
+                <p>Saison : <span class="font-bold">{{ standing.season_name }}</span></p>
+                <p>Position : <span class="font-bold">{{ standing.position }}</span></p>
+                <p>Points : <span class="font-bold">{{ standing.points }}</span></p>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    
       <!-- Détails spécifiques à l'équipe -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div *ngIf="selectedTeamDetails?.stadium" class="bg-purple-500 text-white p-4 rounded-lg shadow-md">
           <p class="font-bold">Stade</p>
           <p>{{ selectedTeamDetails?.stadium }}</p>
@@ -110,21 +133,6 @@
           <p class="font-bold">Capacité</p>
           <p>{{ selectedTeamDetails?.capacity | number }}</p>
         </div>
-
-        <!-- Classement de l'équipe pour chaque saison -->
-        <div *ngIf="standingsBySeason.length > 0" class="flex justify-center">
-          <div class="w-full max-w-4xl bg-blue-500 text-white rounded-lg shadow-md p-6 mb-6">
-            <h3 class="text-2xl font-semibold mb-4 text-center">Classement pour toutes les saisons</h3>
-            <ul>
-              <li *ngFor="let standing of standingsBySeason" class="mb-4">
-                <p>Saison : <span class="font-bold">{{ standing.season_name }}</span></p>
-                <p>Position : <span class="font-bold">{{ standing.position }}</span></p>
-                <p>Points : <span class="font-bold">{{ standing.points }}</span></p>
-              </li>
-            </ul>
-          </div>
-        </div>
-
       </div>
     </section>
   </main>

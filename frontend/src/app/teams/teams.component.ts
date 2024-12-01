@@ -109,6 +109,15 @@ export class TeamsComponent implements OnInit {
         console.error('Erreur lors de la récupération des détails de l\'équipe :', err);
       }
     });
+
+    this.teamService.getTeamImage(team.team_id).subscribe({
+      next: (response) => {
+        this.teamImageUrl = response.image;
+      },
+      error: (err) => {
+        console.error("Erreur lors de la récupération de l'image de l'équipe :", err);
+      }
+    });
   }
   
   loadStandingsForTeam(teamId: number) {

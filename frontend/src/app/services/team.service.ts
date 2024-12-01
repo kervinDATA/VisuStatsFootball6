@@ -34,4 +34,8 @@ export class TeamService {
   getStandingsForAllSeasons(teamId: number): Observable<any[]> {
     return this.http.get<any[]>(`http://localhost:5002/standings/team/${teamId}/standings`);
   }
+
+  getTeamImage(teamId: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl}/${teamId}/image`);
+  }
 }
