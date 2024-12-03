@@ -16,7 +16,6 @@ router.get('/stat-types', async (req, res) => {
 
 
 // Route pour obtenir les statistiques pour un type spécifique sur une ou plusieurs saisons
-// Route pour obtenir les statistiques pour un type spécifique sur une ou plusieurs saisons
 router.get('/stats', async (req, res) => {
     const { type_name, season_names, include_rank, team_id } = req.query;
   
@@ -66,6 +65,36 @@ router.get('/stats', async (req, res) => {
       res.json(result.rows);
     } catch (error) {
       console.error("Erreur lors de la récupération des statistiques", error.stack);
+      res.status(500).json({ message: 'Erreur serveur' });
+    }
+  });
+
+  // Route pour obtenir la possession de balle (%) et le classement des équipes pour une saison donnée
+  router.get('/ball-possession', async (req, res) => {
+    const { season_name } = req.query;
+  
+    if (!season_name) {
+      return res.status(400).json({ message: 'Veuillez fournir un season_name' });
+    }
+  
+    try {
+      const query = `
+        SELECT 
+          ft.team_id,
+          CONCAT(ft.average, ' %') AS ball_possession,
+          ft.classement AS team_position,
+          dt.name AS team_name
+        FROM dev_app_foot.fact_teams1 ft
+        JOIN dev_app_foot.dim_seasons ds ON ft.season_id = ds.season_id
+        JOIN dev_app_foot.dim_teams dt ON ft.team_id = dt.team_id
+        WHERE ft.type_name = 'Ball Possession %'
+          AND ds.season_name = $1
+        ORDER BY ft.classement ASC;
+      `;
+      const result = await pool.query(query, [season_name]);
+      res.json(result.rows);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des données :', error.stack);
       res.status(500).json({ message: 'Erreur serveur' });
     }
   });

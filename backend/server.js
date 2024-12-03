@@ -16,6 +16,7 @@ const venuesRoutes = require('./routes/venuesRoutes');
 const scoresRoutes = require('./routes/scoresRoutes');
 const imageRoutes = require('./routes/imageRoutes'); 
 const standingRoutes = require('./routes/standingRoutes');
+const analysisRoutes = require('./routes/analysisRoutes');
 
 
 const authRoutes = require('./routes/authRoutes'); // Importer les routes d'authentification
@@ -42,6 +43,8 @@ app.use('/fact-teams3', factTeams3Routes);
 app.use('/fact-teams4', factTeams4Routes);
 app.use('/fact-teams5', factTeams5Routes);
 app.use('/fact-teams6', factTeams6Routes);
+
+app.use('/api/analysis', analysisRoutes);
 
 
 app.use('/auth', authRoutes); // Route pour l'authentification

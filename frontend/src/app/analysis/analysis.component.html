@@ -1,3 +1,144 @@
-<h2>Page Analyses</h2>
-<p>Contenu pour les analyses du site.</p>
+<div class="p-4">
+  <!-- Titre principal -->
+  <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">Possession vs Performance</h1>
 
+  <!-- Filtre déroulant compact -->
+  <label for="season-select" class="block text-sm font-medium text-gray-700 mb-2">
+    Sélectionnez une saison :
+  </label>
+  <select
+    id="season-select"
+    class="block w-1/2 px-2 py-1 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm mx-auto"
+    [(ngModel)]="selectedSeasonName"
+    (ngModelChange)="selectSeason($event)">
+    <option value="" disabled [selected]="selectedSeasonName === '2023/2024'">
+      Choisissez une saison
+    </option>
+    <option *ngFor="let season of seasons" [value]="season.season_name">
+      {{ season.season_name }}
+    </option>
+  </select>
+
+  <!-- Affichage de la saison sélectionnée -->
+  <div class="mt-4 text-gray-700 text-center" *ngIf="selectedSeasonName">
+    Saison sélectionnée : <strong>{{ selectedSeasonName }}</strong>
+  </div>
+
+  <!-- Graphique 1 : Possession -->
+  <div class="mt-8">
+    <apx-chart
+      *ngIf="chartOptionsPossession"
+      [series]="chartOptionsPossession.series"
+      [chart]="chartOptionsPossession.chart"
+      [xaxis]="chartOptionsPossession.xaxis"
+      [yaxis]="chartOptionsPossession.yaxis"
+      [title]="chartOptionsPossession.title">
+    </apx-chart>
+  </div>
+
+  <!-- Texte d'analyse pour la première analyse -->
+  <div class="mt-8 p-4 bg-gray-100 rounded-lg shadow">
+    <h2 class="text-xl font-bold text-gray-800 text-center mb-4">Analyse</h2>
+    <p class="text-gray-700 leading-relaxed">
+      Les données révèlent une tendance intéressante : les deux premières équipes du championnat, quelle que soit la saison, affichent généralement une possession de balle élevée, oscillant entre 
+      <strong>60% et 70%</strong>. Cela semble confirmer une corrélation entre un style de jeu basé sur la maîtrise du ballon et les performances au classement.
+    </p>
+    <p class="text-gray-700 leading-relaxed mt-4">
+      Cependant, certaines exceptions viennent nuancer cette observation. Prenons la saison <strong>2021/2022</strong> : l’équipe d’<strong>Aberdeen</strong>, avec une possession moyenne remarquable de 
+      <strong>57,26%</strong>, a terminé <strong>9ᵉ sur 12</strong>. Cela pourrait indiquer une difficulté à transformer la possession en efficacité offensive, ou peut-être une vulnérabilité face aux contres-attaques adverses. Ces lacunes pourraient aussi s’expliquer par une perte fréquente du ballon dans des zones sensibles.
+    </p>
+    <p class="text-gray-700 leading-relaxed mt-4">
+      À l’inverse, des équipes comme <strong>Motherwell</strong> sur la même saison, avec seulement <strong>42% de possession</strong>, se distinguent par leur efficacité. Finissant <strong>5ᵉ</strong>, cette performance peut être attribuée à une approche défensive bien rodée et à une capacité à jouer en contre avec succès.
+    </p>
+    <p class="text-gray-700 leading-relaxed mt-4">
+      Ces observations ouvrent des pistes de réflexion : la possession de balle est-elle toujours synonyme de succès ? Ou bien certains styles de jeu, même moins dominants, peuvent-ils être tout aussi efficaces, voire surprenants ?
+    </p>
+  </div>
+
+  <!-- Deuxième analyse -->
+  <div class="mt-12 p-4">
+    <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">Dangerous Attacks & Goals</h1>
+
+    <!-- Graphique 2 -->
+    <div class="mt-8">
+      <apx-chart
+        *ngIf="chartOptionsDangerousAttacks"
+        [series]="chartOptionsDangerousAttacks.series"
+        [chart]="chartOptionsDangerousAttacks.chart"
+        [xaxis]="chartOptionsDangerousAttacks.xaxis"
+        [yaxis]="chartOptionsDangerousAttacks.yaxis"
+        [title]="chartOptionsDangerousAttacks.title">
+      </apx-chart>
+    </div>
+
+    <!-- Texte d'analyse pour la deuxième analyse -->
+    <div class="mt-8 p-4 bg-gray-100 rounded-lg shadow">
+      <h2 class="text-xl font-bold text-gray-800 text-center mb-4">Analyse</h2>
+      <p class="text-gray-700 leading-relaxed">
+        Les données mettent en lumière une tendance marquante : les deux premières équipes du classement, quelle que soit la saison, se démarquent non seulement par un nombre élevé d’attaques dangereuses, mais aussi par une excellente capacité à convertir ces actions en buts. Cela souligne leur efficacité offensive, un facteur clé de leur succès.
+      </p>
+      <p class="text-gray-700 leading-relaxed mt-4">
+        Cependant, des exceptions intrigantes apparaissent. Par exemple, lors de la saison <strong>2019/2020</strong>, l’équipe d’<strong>Hearts</strong>, dernière du classement, se classe <strong>3ᵉ en termes d’attaques dangereuses</strong> avec un total impressionnant de <strong>1797 attaques</strong>, mais n’a marqué que <strong>31 buts</strong>. En revanche, <strong>Motherwell</strong>, classée <strong>3ᵉ cette saison-là</strong>, n’a réalisé que <strong>1474 attaques dangereuses</strong>, mais a su les convertir en <strong>41 buts</strong>.
+      </p>
+      <p class="text-gray-700 leading-relaxed mt-4">
+        Ces observations suggèrent que la capacité à transformer des situations offensives en buts, autrement dit la <strong>finition</strong>, joue un rôle déterminant dans la réussite d’une équipe. Cela soulève une question : une finition efficace peut-elle compenser d’autres faiblesses, comme une défense moins performante ou une possession de balle moyenne ?
+      </p>
+      <p class="text-gray-700 leading-relaxed mt-4">
+        Un autre point intéressant concerne <strong>Hearts</strong>. Lors de la même saison, cette équipe présente une corrélation notable entre la <strong>possession de balle</strong> (3ᵉ du championnat) et son nombre d’attaques dangereuses (également 3ᵉ). Pourtant, cela n’a pas suffi à éviter la relégation. Cela pourrait indiquer des problèmes récurrents liés à la perte du ballon dans des zones sensibles, ou à une défense mal organisée pour contrer les attaques adverses.
+      </p>
+      <p class="text-gray-700 leading-relaxed mt-4">
+        Ces observations renforcent l’idée que pour évaluer les performances d’une équipe, il est essentiel de considérer une approche holistique, prenant en compte à la fois les aspects offensifs et défensifs. Le football, dans toute sa complexité, met en évidence l’importance des transitions, des contre-attaques et de la gestion stratégique du ballon.
+      </p>
+    </div>
+  </div>
+
+
+  <!-- Troisième analyse -->
+  <div class="mt-12 p-4">
+    <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">Scoring Minutes Distribution</h1>
+
+    <!-- Graphiques circulaires -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+      <!-- Graphique Celtic -->
+      <div class="p-4 bg-gray-100 rounded-lg shadow">
+        <h3 class="text-lg font-bold text-gray-800 text-center mb-4">Celtic</h3>
+        <apx-chart
+          *ngIf="chartOptionsCeltic"
+          [series]="chartOptionsCeltic.series"
+          [chart]="chartOptionsCeltic.chart"
+          [labels]="chartOptionsCeltic.labels"
+          [title]="chartOptionsCeltic.title">
+        </apx-chart>
+      </div>
+
+      <!-- Graphique Rangers -->
+      <div class="p-4 bg-gray-100 rounded-lg shadow">
+        <h3 class="text-lg font-bold text-gray-800 text-center mb-4">Rangers</h3>
+        <apx-chart
+          *ngIf="chartOptionsRangers"
+          [series]="chartOptionsRangers.series"
+          [chart]="chartOptionsRangers.chart"
+          [labels]="chartOptionsRangers.labels"
+          [title]="chartOptionsRangers.title">
+        </apx-chart>
+      </div>
+    </div>
+
+    <!-- Texte d'analyse pour la troisième analyse -->
+    <div class="mt-8 p-4 bg-gray-100 rounded-lg shadow">
+      <h2 class="text-xl font-bold text-gray-800 text-center mb-4">Analyse</h2>
+      <p class="text-gray-700 leading-relaxed">
+        Les données révèlent une tendance marquante : la majorité des buts marqués par <strong>Celtic</strong> et <strong>Rangers</strong> se concentre dans le dernier quart d'heure des matchs, entre la <strong>75ᵉ et la 90ᵉ minute</strong>. Cette observation soulève des questions intéressantes sur le style de jeu et les dynamiques de ces deux équipes.
+      </p>
+      <p class="text-gray-700 leading-relaxed mt-4">
+        Depuis plusieurs années, <strong>Celtic</strong> et <strong>Rangers</strong> occupent systématiquement les <strong>premières places du classement</strong>. Cette domination pousse leurs adversaires à adopter des stratégies <strong>ultra-défensives</strong>, cherchant à limiter les espaces et les occasions de but. Cependant, la <strong>possession de balle élevée</strong> et le <strong>rythme imposé</strong> par ces deux équipes semblent épuiser leurs opposants au fil du match.
+      </p>
+      <p class="text-gray-700 leading-relaxed mt-4">
+        En conséquence, le dernier quart d'heure devient souvent décisif. Lorsque les défenses adverses commencent à fléchir sous la fatigue, les actions offensives de <strong>Celtic</strong> et <strong>Rangers</strong> trouvent plus facilement le chemin des filets. Cela souligne leur capacité à <strong>maintenir un niveau d'intensité élevé tout au long du match</strong> et à capitaliser sur les faiblesses physiques ou tactiques de leurs adversaires en fin de rencontre.
+      </p>
+      <p class="text-gray-700 leading-relaxed mt-4">
+        Ces données renforcent l'idée que l’endurance et la patience sont des éléments clés dans la stratégie de ces équipes dominantes, qui savent exploiter le temps comme un allié pour concrétiser leur supériorité sur le terrain.
+      </p>
+    </div>
+  </div>
+</div>
