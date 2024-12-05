@@ -15,10 +15,6 @@ import { UserPageService } from '../services/user-page.service';
 })
 export class UserPageComponent implements OnInit {
   seasons: string[] = [];
-  selectedSeason: string = '';
-  selectedStatType: string = ''; // Type de statistique sélectionné
-  chartData: any = null; // Données pour le graphique
-
   statTypes = [
     { label: 'Corners', route: 'stats/corners' },
     { label: 'Attacks', route: 'stats/attacks' },
@@ -30,10 +26,18 @@ export class UserPageComponent implements OnInit {
     { label: 'Goals by Interval', route: 'scoring-intervals' },
   ];
 
+  // Liste des graphiques
+  charts: {
+    selectedSeason: string;
+    selectedStatType: string;
+    chartData: any;
+  }[] = [];
+
   constructor(private seasonService: SeasonService, private userPageService: UserPageService) {}
 
   ngOnInit(): void {
     this.loadSeasons();
+    this.addChart(); // Initialiser avec un graphique par défaut
   }
 
   loadSeasons(): void {
@@ -47,44 +51,61 @@ export class UserPageComponent implements OnInit {
     );
   }
 
-  updateChart(): void {
-    if (!this.selectedSeason || !this.selectedStatType) {
+  addChart(): void {
+    this.charts.push({
+      selectedSeason: '',
+      selectedStatType: '',
+      chartData: null,
+    });
+  }
+
+  removeChart(index: number): void {
+    if (index >= 0 && index < this.charts.length) {
+      this.charts.splice(index, 1);
+    } else {
+      console.warn('Index de graphique invalide:', index);
+    }
+  }
+
+  updateChart(index: number): void {
+    const chart = this.charts[index];
+
+    if (!chart.selectedSeason || !chart.selectedStatType) {
       console.warn('Veuillez sélectionner une saison et un type de statistique.');
       return;
     }
-  
-    const selectedRoute = this.statTypes.find((type) => type.route === this.selectedStatType)?.route;
-  
+
+    const selectedRoute = this.statTypes.find((type) => type.route === chart.selectedStatType)?.route;
+
     if (!selectedRoute) {
       console.warn('Type de statistique non reconnu.');
       return;
     }
-  
+
     this.userPageService.getStatData(selectedRoute, {
-      season_name: this.selectedSeason,
+      season_name: chart.selectedSeason,
     }).subscribe(
       (data) => {
         console.log('Données reçues pour le graphique :', data);
-  
+
         if (!data || data.length === 0) {
           console.warn('Aucune donnée reçue pour ce filtre.');
-          this.chartData = null;
+          chart.chartData = null;
           return;
         }
-  
+
         if (selectedRoute === 'scoring-intervals') {
-          // Logique spécifique pour un graphique empilé
-          const teams: string[] = Array.from(new Set(data.map((item: any) => 
-            `${item.team_name} #${item.team_position || ''}`.trim()
-        )));
+          const teams: string[] = Array.from(
+            new Set(data.map((item: any) => `${item.team_name} #${item.team_position || ''}`.trim()))
+          );
           const intervals: string[] = Array.from(new Set(data.map((item: any) => item.interval_time)));
-        
+
           const series = intervals.map((interval: string) => {
             return {
-              name: interval, // L'intervalle de temps comme nom de la série
+              name: interval,
               data: teams.map((team: string) => {
                 const record = data.find(
-                  (item: any) => 
+                  (item: any) =>
                     `${item.team_name} #${item.team_position || ''}`.trim() === team &&
                     item.interval_time === interval
                 );
@@ -92,8 +113,8 @@ export class UserPageComponent implements OnInit {
               }),
             };
           });
-        
-          this.chartData = {
+
+          chart.chartData = {
             series: series,
             chart: {
               type: 'bar',
@@ -115,7 +136,6 @@ export class UserPageComponent implements OnInit {
             },
           };
         } else {
-          // Logique pour les autres types de graphiques
           const categories = data.map((item: any) =>
             `${item.team_name} ${item.team_position ? `#${item.team_position}` : ''}`.trim()
           );
@@ -124,10 +144,10 @@ export class UserPageComponent implements OnInit {
             item.total_wins || item.total_lost || item.total_draw || item.count || 0
           );
 
-          this.chartData = {
+          chart.chartData = {
             series: [
               {
-                name: this.selectedStatType,
+                name: chart.selectedStatType,
                 data: seriesData,
               },
             ],

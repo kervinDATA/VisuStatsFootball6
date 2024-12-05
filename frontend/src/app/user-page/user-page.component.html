@@ -1,28 +1,40 @@
-<div class="filters">
-    <!-- Filtre pour les saisons -->
-    <label for="season">Saison :</label>
-    <select id="season" [(ngModel)]="selectedSeason" (change)="updateChart()">
-      <option *ngFor="let season of seasons" [value]="season">{{ season }}</option>
-    </select>
-  
-    <!-- Filtre pour le type de statistique -->
-    <label for="statType">Type de statistique :</label>
-    <select id="statType" [(ngModel)]="selectedStatType" (change)="updateChart()">
-      <option *ngFor="let type of statTypes" [value]="type.route">{{ type.label }}</option>
-    </select>
+<div class="controls">
+    <!-- Bouton pour ajouter un graphique -->
+    <button (click)="addChart()">Ajouter un graphique</button>
   </div>
   
-  <!-- Section pour les graphiques -->
+  <!-- Affichage des graphiques -->
   <div class="charts">
-    <div *ngIf="!chartData">
-      <p>Sélectionnez une saison et un type de statistique pour afficher un graphique.</p>
-    </div>
-    <div *ngIf="chartData">
-      <apx-chart
-        [series]="chartData.series"
-        [chart]="chartData.chart"
-        [xaxis]="chartData.xaxis"
-      ></apx-chart>
+    <div *ngFor="let chart of charts; let i = index" class="chart-container">
+      <!-- Filtres pour chaque graphique -->
+      <div class="filters">
+        <label for="season">Saison :</label>
+        <select [(ngModel)]="chart.selectedSeason" (change)="updateChart(i)">
+          <option *ngFor="let season of seasons" [value]="season">{{ season }}</option>
+        </select>
+  
+        <label for="statType">Type de statistique :</label>
+        <select [(ngModel)]="chart.selectedStatType" (change)="updateChart(i)">
+          <option *ngFor="let type of statTypes" [value]="type.route">{{ type.label }}</option>
+        </select>
+      </div>
+  
+      <!-- Graphique -->
+      <div *ngIf="!chart.chartData">
+        <p>Sélectionnez une saison et un type de statistique pour afficher un graphique.</p>
+      </div>
+      <div *ngIf="chart.chartData">
+        <apx-chart
+          [series]="chart.chartData.series"
+          [chart]="chart.chartData.chart"
+          [xaxis]="chart.chartData.xaxis"
+          [plotOptions]="chart.chartData.plotOptions"
+          [yaxis]="chart.chartData.yaxis"
+        ></apx-chart>
+      </div>
+  
+      <!-- Bouton pour supprimer le graphique -->
+      <button (click)="removeChart(i)">Supprimer ce graphique</button>
     </div>
   </div>
   
