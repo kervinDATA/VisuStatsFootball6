@@ -1,12 +1,103 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { SeasonService } from '../services/season.service';
+import { UserPageService } from '../services/user-page.service';
 
 @Component({
   selector: 'app-user-page',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, FormsModule, RouterModule, NgApexchartsModule],
   templateUrl: './user-page.component.html',
-  styleUrl: './user-page.component.css'
+  styleUrls: ['./user-page.component.css'],
 })
-export class UserPageComponent {
+export class UserPageComponent implements OnInit {
+  seasons: string[] = [];
+  selectedSeason: string = '';
+  selectedStatType: string = ''; // Type de statistique sélectionné
+  chartData: any = null; // Données pour le graphique
 
+  statTypes = [
+    { label: 'Corners', route: 'stats/corners' },
+    { label: 'Attacks', route: 'stats/attacks' },
+    { label: 'Dangerous Attacks', route: 'stats/dangerous-attacks' },
+    { label: 'Ball Possession %', route: 'stats/possession' },
+    { label: 'Wins', route: 'stats/wins' },
+    { label: 'Lost', route: 'stats/lost' },
+    { label: 'Draw', route: 'stats/draw' },
+  ];
+
+  constructor(private seasonService: SeasonService, private userPageService: UserPageService) {}
+
+  ngOnInit(): void {
+    this.loadSeasons();
+  }
+
+  loadSeasons(): void {
+    this.seasonService.getSeasons().subscribe(
+      (data) => {
+        this.seasons = data.map((s: any) => s.season_name);
+      },
+      (error) => {
+        console.error('Erreur lors du chargement des saisons :', error);
+      }
+    );
+  }
+
+  updateChart(): void {
+    if (!this.selectedSeason || !this.selectedStatType) {
+      console.warn('Veuillez sélectionner une saison et un type de statistique.');
+      return;
+    }
+  
+    const selectedRoute = this.statTypes.find((type) => type.route === this.selectedStatType)?.route;
+  
+    if (!selectedRoute) {
+      console.warn('Type de statistique non reconnu.');
+      return;
+    }
+  
+    this.userPageService.getStatData(selectedRoute, {
+      season_name: this.selectedSeason,
+    }).subscribe(
+      (data) => {
+        console.log('Données reçues pour le graphique :', data);
+  
+        if (!data || data.length === 0) {
+          console.warn('Aucune donnée reçue pour ce filtre.');
+          this.chartData = null;
+          return;
+        }
+  
+        // Construire les catégories
+        const categories = data.map((item: any) =>
+          `${item.team_name} ${item.team_position ? `#${item.team_position}` : ''}`.trim()
+        );
+  
+        // Déterminer le champ des données
+        const seriesData = data.map((item: any) => 
+          item.total_wins || item.total_lost || item.total_draw || item.count || 0
+        );
+  
+        // Préparer les données pour le graphique
+        this.chartData = {
+          series: [
+            {
+              name: this.selectedStatType,
+              data: seriesData,
+            },
+          ],
+          chart: { type: 'bar' },
+          xaxis: {
+            categories: categories,
+          },
+        };
+      },
+      (error) => {
+        console.error('Erreur lors du chargement des données du graphique :', error);
+      }
+    );
+  }
 }

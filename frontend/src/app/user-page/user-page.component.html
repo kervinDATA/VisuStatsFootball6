@@ -1,3 +1,28 @@
-<h2>Votre Page</h2>
-<p>Gérez votre profil et vos préférences.</p>
-
+<div class="filters">
+    <!-- Filtre pour les saisons -->
+    <label for="season">Saison :</label>
+    <select id="season" [(ngModel)]="selectedSeason" (change)="updateChart()">
+      <option *ngFor="let season of seasons" [value]="season">{{ season }}</option>
+    </select>
+  
+    <!-- Filtre pour le type de statistique -->
+    <label for="statType">Type de statistique :</label>
+    <select id="statType" [(ngModel)]="selectedStatType" (change)="updateChart()">
+      <option *ngFor="let type of statTypes" [value]="type.route">{{ type.label }}</option>
+    </select>
+  </div>
+  
+  <!-- Section pour les graphiques -->
+  <div class="charts">
+    <div *ngIf="!chartData">
+      <p>Sélectionnez une saison et un type de statistique pour afficher un graphique.</p>
+    </div>
+    <div *ngIf="chartData">
+      <apx-chart
+        [series]="chartData.series"
+        [chart]="chartData.chart"
+        [xaxis]="chartData.xaxis"
+      ></apx-chart>
+    </div>
+  </div>
+  
