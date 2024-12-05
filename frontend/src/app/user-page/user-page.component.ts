@@ -27,6 +27,7 @@ export class UserPageComponent implements OnInit {
     { label: 'Wins', route: 'stats/wins' },
     { label: 'Lost', route: 'stats/lost' },
     { label: 'Draw', route: 'stats/draw' },
+    { label: 'Goals by Interval', route: 'scoring-intervals' },
   ];
 
   constructor(private seasonService: SeasonService, private userPageService: UserPageService) {}
@@ -71,29 +72,71 @@ export class UserPageComponent implements OnInit {
           return;
         }
   
-        // Construire les catégories
-        const categories = data.map((item: any) =>
-          `${item.team_name} ${item.team_position ? `#${item.team_position}` : ''}`.trim()
-        );
-  
-        // Déterminer le champ des données
-        const seriesData = data.map((item: any) => 
-          item.total_wins || item.total_lost || item.total_draw || item.count || 0
-        );
-  
-        // Préparer les données pour le graphique
-        this.chartData = {
-          series: [
-            {
-              name: this.selectedStatType,
-              data: seriesData,
+        if (selectedRoute === 'scoring-intervals') {
+          // Logique spécifique pour un graphique empilé
+          const teams: string[] = Array.from(new Set(data.map((item: any) => 
+            `${item.team_name} #${item.team_position || ''}`.trim()
+        )));
+          const intervals: string[] = Array.from(new Set(data.map((item: any) => item.interval_time)));
+        
+          const series = intervals.map((interval: string) => {
+            return {
+              name: interval, // L'intervalle de temps comme nom de la série
+              data: teams.map((team: string) => {
+                const record = data.find(
+                  (item: any) => 
+                    `${item.team_name} #${item.team_position || ''}`.trim() === team &&
+                    item.interval_time === interval
+                );
+                return record ? parseFloat(record.goals_percentage || 0) : 0;
+              }),
+            };
+          });
+        
+          this.chartData = {
+            series: series,
+            chart: {
+              type: 'bar',
+              stacked: true,
+              stackType: '100%',
             },
-          ],
-          chart: { type: 'bar' },
-          xaxis: {
-            categories: categories,
-          },
-        };
+            xaxis: {
+              categories: teams,
+            },
+            yaxis: {
+              title: {
+                text: 'Percentage of Goals',
+              },
+            },
+            plotOptions: {
+              bar: {
+                horizontal: false,
+              },
+            },
+          };
+        } else {
+          // Logique pour les autres types de graphiques
+          const categories = data.map((item: any) =>
+            `${item.team_name} ${item.team_position ? `#${item.team_position}` : ''}`.trim()
+          );
+
+          const seriesData = data.map((item: any) =>
+            item.total_wins || item.total_lost || item.total_draw || item.count || 0
+          );
+
+          this.chartData = {
+            series: [
+              {
+                name: this.selectedStatType,
+                data: seriesData,
+              },
+            ],
+            chart: { type: 'bar' },
+            xaxis: {
+              categories: categories,
+            },
+          };
+        }
       },
       (error) => {
         console.error('Erreur lors du chargement des données du graphique :', error);
