@@ -377,14 +377,17 @@ router.get('/stats/corners', async (req, res) => {
   // Route pour récupérer les analyses d'un utilisateur
   router.get('/saved-analyses', async (req, res) => {
     const { user_id } = req.query;
+
+    console.log('Requête reçue pour récupérer les analyses avec user_id :', user_id);
   
     if (!user_id) {
+      console.error('Paramètre manquant : user_id');
       return res.status(400).json({ message: 'Paramètre manquant : user_id.' });
     }
   
     try {
       const query = `
-        SELECT * FROM user_saved_analyses
+        SELECT * FROM dev_app_foot.user_saved_analyses
         WHERE user_id = $1
         ORDER BY id DESC;
       `;
@@ -392,7 +395,7 @@ router.get('/stats/corners', async (req, res) => {
       res.json(result.rows);
     } catch (error) {
       console.error('Erreur lors de la récupération des analyses :', error.stack);
-      res.status(500).json({ message: 'Erreur serveur.' });
+      res.status(500).json({ message: 'Erreur serveur.' , details: error.message, });
     }
   });
 
