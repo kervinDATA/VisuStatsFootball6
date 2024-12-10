@@ -52,6 +52,11 @@ export class UserPageComponent implements OnInit {
   }
 
   addChart(): void {
+    if (this.charts.length >= 5) {
+      console.warn('Vous ne pouvez pas ajouter plus de 5 graphiques.');
+      return;
+    }
+
     this.charts.push({
       selectedSeason: '',
       selectedStatType: '',

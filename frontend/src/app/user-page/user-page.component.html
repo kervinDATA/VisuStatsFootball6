@@ -1,40 +1,44 @@
 <div class="controls">
-    <!-- Bouton pour ajouter un graphique -->
-    <button (click)="addChart()">Ajouter un graphique</button>
+  <!-- Message d'avertissement si la limite est atteinte -->
+  <div *ngIf="charts.length >= 5" class="warning">
+    <p>Limite atteinte : Vous ne pouvez pas ajouter plus de 5 graphiques.</p>
   </div>
-  
-  <!-- Affichage des graphiques -->
-  <div class="charts">
-    <div *ngFor="let chart of charts; let i = index" class="chart-container">
-      <!-- Filtres pour chaque graphique -->
-      <div class="filters">
-        <label for="season">Saison :</label>
-        <select [(ngModel)]="chart.selectedSeason" (change)="updateChart(i)">
-          <option *ngFor="let season of seasons" [value]="season">{{ season }}</option>
-        </select>
-  
-        <label for="statType">Type de statistique :</label>
-        <select [(ngModel)]="chart.selectedStatType" (change)="updateChart(i)">
-          <option *ngFor="let type of statTypes" [value]="type.route">{{ type.label }}</option>
-        </select>
-      </div>
-  
-      <!-- Graphique -->
-      <div *ngIf="!chart.chartData">
-        <p>Sélectionnez une saison et un type de statistique pour afficher un graphique.</p>
-      </div>
-      <div *ngIf="chart.chartData">
-        <apx-chart
-          [series]="chart.chartData.series"
-          [chart]="chart.chartData.chart"
-          [xaxis]="chart.chartData.xaxis"
-          [plotOptions]="chart.chartData.plotOptions"
-          [yaxis]="chart.chartData.yaxis"
-        ></apx-chart>
-      </div>
-  
-      <!-- Bouton pour supprimer le graphique -->
-      <button (click)="removeChart(i)">Supprimer ce graphique</button>
+  <!-- Bouton pour ajouter un graphique -->
+  <button (click)="addChart()">Ajouter un graphique</button>
+</div>
+
+<!-- Affichage des graphiques -->
+<div class="charts">
+  <div *ngFor="let chart of charts; let i = index" class="chart-container">
+    <!-- Filtres pour chaque graphique -->
+    <div class="filters">
+      <label for="season">Saison :</label>
+      <select [(ngModel)]="chart.selectedSeason" (change)="updateChart(i)">
+        <option *ngFor="let season of seasons" [value]="season">{{ season }}</option>
+      </select>
+
+      <label for="statType">Type de statistique :</label>
+      <select [(ngModel)]="chart.selectedStatType" (change)="updateChart(i)">
+        <option *ngFor="let type of statTypes" [value]="type.route">{{ type.label }}</option>
+      </select>
     </div>
+
+    <!-- Graphique -->
+    <div *ngIf="!chart.chartData">
+      <p>Sélectionnez une saison et un type de statistique pour afficher un graphique.</p>
+    </div>
+    <div *ngIf="chart.chartData">
+      <apx-chart
+        [series]="chart.chartData.series"
+        [chart]="chart.chartData.chart"
+        [xaxis]="chart.chartData.xaxis"
+        [plotOptions]="chart.chartData.plotOptions"
+        [yaxis]="chart.chartData.yaxis"
+      ></apx-chart>
+    </div>
+
+    <!-- Bouton pour supprimer le graphique -->
+    <button (click)="removeChart(i)">Supprimer ce graphique</button>
   </div>
-  
+</div>
+
