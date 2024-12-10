@@ -329,5 +329,73 @@ router.get('/stats/corners', async (req, res) => {
   });
 
 
+  // Route pour sauvegarder une analyse avec association à un utilisateur
+  router.post('/save', async (req, res) => {
+    const { name, charts, user_id } = req.body;
+  
+    // Log des données reçues
+    console.log('Requête reçue pour sauvegarde :', { name, charts, user_id });
+  
+    // Vérifier les paramètres
+    if (!name || !charts || !user_id) {
+      console.error('Paramètres manquants :', { name, charts, user_id });
+      return res.status(400).json({ message: 'Paramètres manquants : name, charts, ou user_id.' });
+    }
+  
+    try {
+      const query = `
+        INSERT INTO dev_app_foot.user_saved_analyses (name, charts, user_id)
+        VALUES ($1, $2, $3)
+        RETURNING *;
+      `;
+  
+      // Log avant l'exécution de la requête SQL
+      console.log('Préparation de la requête SQL :', query);
+      console.log('Valeurs utilisées :', { name, charts: JSON.stringify(charts), user_id });
+  
+      // Exécuter la requête SQL
+      const result = await pool.query(query, [name, JSON.stringify(charts), user_id]);
+  
+      // Log du résultat de la requête
+      console.log('Résultat de l\'insertion :', result.rows[0]);
+  
+      // Réponse réussie
+      res.json(result.rows[0]);
+    } catch (error) {
+      // Log détaillé de l'erreur
+      console.error('Erreur lors de la sauvegarde de l’analyse :', error.message);
+      console.error('Détails de l\'erreur :', error.stack);
+  
+      // Réponse avec message d'erreur détaillé
+      res.status(500).json({
+        message: 'Erreur serveur.',
+        details: error.message, // Détails de l'erreur pour le débogage
+      });
+    }
+  });
+
+  // Route pour récupérer les analyses d'un utilisateur
+  router.get('/saved-analyses', async (req, res) => {
+    const { user_id } = req.query;
+  
+    if (!user_id) {
+      return res.status(400).json({ message: 'Paramètre manquant : user_id.' });
+    }
+  
+    try {
+      const query = `
+        SELECT * FROM user_saved_analyses
+        WHERE user_id = $1
+        ORDER BY id DESC;
+      `;
+      const result = await pool.query(query, [user_id]);
+      res.json(result.rows);
+    } catch (error) {
+      console.error('Erreur lors de la récupération des analyses :', error.stack);
+      res.status(500).json({ message: 'Erreur serveur.' });
+    }
+  });
+
+
 
 module.exports = router;

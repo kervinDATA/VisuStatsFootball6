@@ -45,6 +45,17 @@ export class AuthService {
     );
   }
 
+  // Stocker les informations de l'utilisateur dans localStorage
+  storeUser(user: any): void {
+    localStorage.setItem('user', JSON.stringify(user));
+  }
+  
+  // Récupérer l'ID de l'utilisateur depuis localStorage
+  getUserId(): string | null {
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user).id : null;
+  }
+
 
 }
 

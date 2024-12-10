@@ -22,12 +22,13 @@ export class LoginComponent {
   onLogin() {
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
-        this.authService.storeToken(response.token); // Stocker le token
+        this.authService.storeToken(response.token); // Stocker le token JWT
+        this.authService.storeUser(response.user); // Stocker l'utilisateur connecté
+  
         console.log('Connexion réussie !');
         this.appComponent.showNotification('Connexion réussie !');
-        //this.router.navigate(['/user-page']); // Redirige vers "Votre Page" après connexion
         this.router.navigate(['/']); // Rediriger vers la page d'accueil
-        this.errorMessage = ''; // Réinitialiser le message d'erreur en cas de succès
+        this.errorMessage = ''; // Réinitialiser le message d'erreur
       },
       error: (err) => {
         console.error('Erreur de connexion:', err);

@@ -5,6 +5,13 @@
   </div>
   <!-- Bouton pour ajouter un graphique -->
   <button (click)="addChart()">Ajouter un graphique</button>
+  <!-- Formulaire pour sauvegarder les graphiques -->
+  <div class="save-analysis">
+    <label for="analysis-name">Nom de l’analyse :</label>
+    <input type="text" [(ngModel)]="analysisName" placeholder="Nom de l'analyse" />
+
+    <button (click)="saveCurrentAnalysis()">Sauvegarder les graphiques actuels</button>
+  </div>
 </div>
 
 <!-- Affichage des graphiques -->

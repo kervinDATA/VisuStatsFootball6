@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { SeasonService } from '../services/season.service';
 import { UserPageService } from '../services/user-page.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-user-page',
@@ -33,11 +35,28 @@ export class UserPageComponent implements OnInit {
     chartData: any;
   }[] = [];
 
-  constructor(private seasonService: SeasonService, private userPageService: UserPageService) {}
+  // Nom de l’analyse à sauvegarder
+  analysisName: string = '';
+
+  // Liste des analyses sauvegardées
+  savedAnalyses: { name: string; charts: any[] }[] = [];
+
+  userId: string = ''; // Stocke l'identifiant de l'utilisateur connecté
+
+  constructor(private seasonService: SeasonService, private userPageService: UserPageService, private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
+    this.userId = this.authService.getUserId() || ''; // Récupérer l'ID utilisateur depuis AuthService
+
+    if (!this.userId) {
+      console.error('Utilisateur non connecté !'); 
+      this.router.navigate(['/login']); // Rediriger vers la page de connexion si l'utilisateur n'est pas connecté
+      return;
+    }
+
     this.loadSeasons();
     this.addChart(); // Initialiser avec un graphique par défaut
+    this.loadSavedAnalyses(); // Charger les analyses sauvegardées
   }
 
   loadSeasons(): void {
@@ -168,4 +187,53 @@ export class UserPageComponent implements OnInit {
       }
     );
   }
+
+  // Sauvegarder les graphiques actuels
+  saveCurrentAnalysis(): void {
+    if (!this.analysisName.trim()) {
+      console.warn('Le nom de l’analyse est obligatoire.');
+      return;
+    }
+  
+    if (this.savedAnalyses.length >= 10) {
+      console.warn('Vous ne pouvez pas sauvegarder plus de 10 analyses.');
+      return;
+    }
+  
+    const chartsWithSeason = this.charts.map((chart) => ({
+      season: chart.selectedSeason,
+      statType: chart.selectedStatType,
+      chartData: chart.chartData
+    }));
+  
+    const analysis = {
+      name: this.analysisName,
+      charts: chartsWithSeason,
+      user_id: this.userId
+    };
+  
+    this.userPageService.saveAnalysis(analysis).subscribe(
+      () => {
+        console.log('Analyse sauvegardée avec succès.');
+        this.savedAnalyses.push(analysis);
+        this.analysisName = ''; // Réinitialiser le champ
+      },
+      (error) => {
+        console.error('Erreur lors de la sauvegarde de l’analyse :', error);
+      }
+    );
+  }
+
+  // Charger les analyses sauvegardées
+  loadSavedAnalyses(): void {
+  this.userPageService.getSavedAnalyses(this.userId).subscribe(
+    (data) => {
+      this.savedAnalyses = data;
+    },
+    (error) => {
+      console.error('Erreur lors du chargement des analyses sauvegardées :', error);
+    }
+  );
+}
+
 }

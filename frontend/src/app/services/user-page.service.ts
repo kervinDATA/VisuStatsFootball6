@@ -15,4 +15,14 @@ export class UserPageService {
     const httpParams = new HttpParams({ fromObject: params });
     return this.http.get(url, { params: httpParams });
   }
+
+  // Méthode existante pour sauvegarder une analyse
+  saveAnalysis(analysis: { name: string; charts: any[]; user_id: string }): Observable<any> {
+    return this.http.post(`${this.apiUrl}/save`, analysis);
+  }
+
+  // Nouvelle méthode pour récupérer les analyses sauvegardées
+  getSavedAnalyses(user_id: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/saved-analyses`, { params: { user_id } });
+  }
 }
