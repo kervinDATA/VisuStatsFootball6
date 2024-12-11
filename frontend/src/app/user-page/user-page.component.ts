@@ -289,6 +289,8 @@ deleteAnalysis(analysisId: number): void {
     return;
   }
 
+  console.log(`Tentative de suppression de l'analyse avec ID : ${analysisId}`);
+
   this.userPageService.deleteAnalysis(analysisId).subscribe(
     () => {
       console.log(`Analyse avec ID ${analysisId} supprimée avec succès.`);
