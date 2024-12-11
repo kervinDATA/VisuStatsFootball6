@@ -25,4 +25,15 @@ export class UserPageService {
   getSavedAnalyses(user_id: string): Observable<any> {
     return this.http.get(`${this.apiUrl}/saved-analyses`, { params: { user_id } });
   }
+
+  // Méthode pour modifier une analyse existante
+  updateAnalysis(id: number, analysis: { name: string; charts: any[]; user_id: string }): Observable<any> {
+    return this.http.put(`${this.apiUrl}/update/${id}`, analysis);
+  }
+
+  // Méthode pour supprimer une analyse existante
+  deleteAnalysis(analysisId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/delete/${analysisId}`);
+  }
+
 }

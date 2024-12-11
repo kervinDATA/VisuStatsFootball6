@@ -39,7 +39,7 @@ export class UserPageComponent implements OnInit {
   analysisName: string = '';
 
   // Liste des analyses sauvegardées
-  savedAnalyses: { name: string; charts: any[] }[] = [];
+  savedAnalyses: { id: number; name: string; charts: any[] }[] = [];
 
   userId: string = ''; // Stocke l'identifiant de l'utilisateur connecté
 
@@ -213,9 +213,14 @@ export class UserPageComponent implements OnInit {
     };
   
     this.userPageService.saveAnalysis(analysis).subscribe(
-      () => {
+      (response) => {
         console.log('Analyse sauvegardée avec succès.');
-        this.savedAnalyses.push(analysis);
+        // Ajouter l'analyse sauvegardée avec l'ID retourné par le backend
+        this.savedAnalyses.push({
+          id: response.id, // Utiliser l'ID retourné
+          name: response.name,
+          charts: response.charts,
+        });
         this.analysisName = ''; // Réinitialiser le champ
       },
       (error) => {
@@ -237,13 +242,63 @@ export class UserPageComponent implements OnInit {
 }
 
 // Charger une analyse sauvegardée spécifique par l'utilisateur
-loadAnalysis(analysis: { name: string; charts: any[] }): void {
+loadAnalysis(analysis: { id: number; name: string; charts: any[] }): void {
   this.charts = analysis.charts.map((chart) => ({
     selectedSeason: chart.season,
     selectedStatType: chart.statType,
     chartData: chart.chartData,
   }));
+  this.analysisName = analysis.name; // Remplir le champ avec le nom actuel
   console.log(`Analyse "${analysis.name}" chargée avec succès.`);
+}
+
+// Modifier une analyse existante
+editAnalysis(analysis: { id: number; name: string; charts: any[] }): void {
+  if (!this.analysisName.trim()) {
+    console.warn('Le nom de l’analyse est obligatoire pour la modification.');
+    return;
+  }
+
+  const updatedCharts = this.charts.map((chart) => ({
+    season: chart.selectedSeason,
+    statType: chart.selectedStatType,
+    chartData: chart.chartData,
+  }));
+
+  const updatedAnalysis = {
+    id: analysis.id,
+    name: this.analysisName,
+    charts: updatedCharts,
+    user_id: this.userId,
+  };
+
+  this.userPageService.updateAnalysis(updatedAnalysis.id, updatedAnalysis).subscribe(
+    () => {
+      console.log(`Analyse "${this.analysisName}" modifiée avec succès.`);
+      this.loadSavedAnalyses(); // Recharger les analyses sauvegardées
+    },
+    (error) => {
+      console.error('Erreur lors de la modification de l’analyse :', error);
+    }
+  );
+}
+
+// Supprimer une analyse
+deleteAnalysis(analysisId: number): void {
+  if (!confirm('Êtes-vous sûr de vouloir supprimer cette analyse ?')) {
+    return;
+  }
+
+  this.userPageService.deleteAnalysis(analysisId).subscribe(
+    () => {
+      console.log(`Analyse avec ID ${analysisId} supprimée avec succès.`);
+      // Supprimer localement pour éviter de recharger depuis le backend
+      this.savedAnalyses = this.savedAnalyses.filter((a) => a.id !== analysisId);
+    },
+    (error) => {
+      console.error('Erreur lors de la suppression de l’analyse :', error);
+    }
+  );
 }
 
 }
