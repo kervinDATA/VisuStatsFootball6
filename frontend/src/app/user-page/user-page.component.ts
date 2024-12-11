@@ -224,7 +224,7 @@ export class UserPageComponent implements OnInit {
     );
   }
 
-  // Charger les analyses sauvegardées
+  // Charger les analyses sauvegardées d'un utilisateur depuis le backend
   loadSavedAnalyses(): void {
   this.userPageService.getSavedAnalyses(this.userId).subscribe(
     (data) => {
@@ -234,6 +234,16 @@ export class UserPageComponent implements OnInit {
       console.error('Erreur lors du chargement des analyses sauvegardées :', error);
     }
   );
+}
+
+// Charger une analyse sauvegardée spécifique par l'utilisateur
+loadAnalysis(analysis: { name: string; charts: any[] }): void {
+  this.charts = analysis.charts.map((chart) => ({
+    selectedSeason: chart.season,
+    selectedStatType: chart.statType,
+    chartData: chart.chartData,
+  }));
+  console.log(`Analyse "${analysis.name}" chargée avec succès.`);
 }
 
 }

@@ -49,3 +49,17 @@
   </div>
 </div>
 
+<!-- Liste des analyses sauvegardées -->
+<div class="saved-analyses">
+  <h3>Analyses sauvegardées</h3>
+  <div *ngIf="savedAnalyses.length === 0">
+    <p>Aucune analyse sauvegardée pour le moment.</p>
+  </div>
+  <ul *ngIf="savedAnalyses.length > 0">
+    <li *ngFor="let analysis of savedAnalyses">
+      <span>{{ analysis.name }}</span>
+      <button (click)="loadAnalysis(analysis)">Charger</button>
+    </li>
+  </ul>
+</div>
+
