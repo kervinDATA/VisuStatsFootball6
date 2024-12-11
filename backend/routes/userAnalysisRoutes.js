@@ -399,6 +399,76 @@ router.get('/stats/corners', async (req, res) => {
     }
   });
 
+  // Route pour mettre à jour une analyse existante
+  router.put('/update/:id', async (req, res) => {
+    const { id } = req.params;
+    const { name, charts, user_id } = req.body;
+  
+    console.log('Requête reçue pour mise à jour :', { id, name, charts, user_id });
+  
+    // Vérification des paramètres
+    if (!id || !name || !charts || !user_id) {
+      console.error('Paramètres manquants :', { id, name, charts, user_id });
+      return res.status(400).json({ message: 'Paramètres manquants : id, name, charts, ou user_id.' });
+    }
+  
+    try {
+      const query = `
+        UPDATE dev_app_foot.user_saved_analyses
+        SET name = $1, charts = $2, user_id = $3
+        WHERE id = $4
+        RETURNING *;
+      `;
+  
+      const result = await pool.query(query, [name, JSON.stringify(charts), user_id, id]);
+  
+      if (result.rows.length === 0) {
+        console.warn('Aucune analyse trouvée avec cet ID :', id);
+        return res.status(404).json({ message: 'Analyse non trouvée.' });
+      }
+  
+      console.log('Mise à jour réussie :', result.rows[0]);
+      res.json(result.rows[0]);
+    } catch (error) {
+      console.error('Erreur lors de la mise à jour de l’analyse :', error.stack);
+      res.status(500).json({ message: 'Erreur serveur.', details: error.message });
+    }
+  });
+
+  // Route pour supprimer une analyse existante par son ID
+  router.delete('/delete/:id', async (req, res) => {
+    const { id } = req.params;
+  
+    console.log('Requête reçue pour suppression de l\'analyse avec ID :', id);
+  
+    // Vérifier si l'ID est présent
+    if (!id) {
+      console.error('Paramètre manquant : id');
+      return res.status(400).json({ message: 'Paramètre manquant : id.' });
+    }
+  
+    try {
+      const query = `
+        DELETE FROM dev_app_foot.user_saved_analyses
+        WHERE id = $1
+        RETURNING *;
+      `;
+  
+      const result = await pool.query(query, [id]);
+  
+      if (result.rows.length === 0) {
+        console.warn('Aucune analyse trouvée avec cet ID :', id);
+        return res.status(404).json({ message: 'Analyse non trouvée.' });
+      }
+  
+      console.log('Analyse supprimée avec succès :', result.rows[0]);
+      res.json({ message: 'Analyse supprimée avec succès.', deletedAnalysis: result.rows[0] });
+    } catch (error) {
+      console.error('Erreur lors de la suppression de l\'analyse :', error.stack);
+      res.status(500).json({ message: 'Erreur serveur.', details: error.message });
+    }
+  });
+
 
 
 module.exports = router;
