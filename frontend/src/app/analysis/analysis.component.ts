@@ -173,6 +173,7 @@ export class AnalysisComponent implements OnInit {
       chart: {
         height: 350,
         type: 'line', // Type combiné
+        foreColor: '#ffffff',
       },
       stroke: {
         width: [0, 2], // Largeur : 0 pour les barres, 2 pour la ligne
@@ -182,18 +183,36 @@ export class AnalysisComponent implements OnInit {
         title: {
           text: 'Équipes et Classement',
         },
+        labels: {
+          style: {
+            colors: '#ffffff', // Étiquettes axe X en blanc
+          },
+        },
+
       },
       yaxis: [
         {
           title: {
             text: 'Dangerous Attacks',
           },
+          labels: {
+            style: {
+              colors: '#ffffff', // Étiquettes axe Y en blanc
+            },
+          },
+  
         },
         {
           opposite: true, // Place l'axe Y des buts sur la droite
           title: {
             text: 'Goals Scored',
           },
+          labels: {
+            style: {
+              colors: '#ffffff', // Étiquettes axe Y en blanc
+            },
+          },
+  
         },
       ],
       tooltip: {
@@ -203,6 +222,10 @@ export class AnalysisComponent implements OnInit {
       title: {
         text: `Dangerous Attacks & Goals (${this.selectedSeasonName})`,
         align: 'center',
+        style: {
+          colors: '#ffffff',
+          },
+  
       },
     };
 
@@ -222,6 +245,7 @@ export class AnalysisComponent implements OnInit {
       chart: {
         type: 'pie',
         height: 350,
+        foreColor: '#ffffff',
       },
       labels: celticData.map((item) => item.interval_time),
       title: {
@@ -235,6 +259,7 @@ export class AnalysisComponent implements OnInit {
       chart: {
         type: 'pie',
         height: 350,
+        foreColor: '#ffffff',
       },
       labels: rangersData.map((item) => item.interval_time),
       title: {
