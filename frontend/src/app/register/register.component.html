@@ -1,25 +1,57 @@
-<h2>Page d'Inscription</h2>
-<p>Formulaire d'inscription pour les utilisateurs.</p>
+<!-- Wrapper principal avec un fond dégradé -->
+<div class="min-h-screen flex flex-col justify-start bg-gradient-to-br from-gray-800 via-gray-700 to-gray-600 text-white py-12">
 
-<!-- Formulaire de connexion -->
-<form (ngSubmit)="onRegister()">
-  <label for="email">Email :</label>
-  <input type="email" id="email" [(ngModel)]="email" name="email" required class="border p-2 mb-4 block">
+  <!-- Conteneur du formulaire -->
+  <div class="max-w-md mx-auto bg-gray-800 bg-opacity-80 rounded-lg shadow-lg p-6">
 
-  <label for="password">Mot de passe :</label>
-  <input type="password" id="password" [(ngModel)]="password" name="password" required class="border p-2 mb-4 block">
+    <!-- Titre principal -->
+    <h2 class="text-2xl font-bold text-yellow-400 text-center mb-4">Inscription</h2>
+    <p class="text-gray-300 text-center mb-6">Créez un compte pour commencer à explorer les analyses !</p>
 
-  <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">S'inscrire</button>
-</form>
+    <!-- Formulaire d'inscription -->
+    <form (ngSubmit)="onRegister()">
 
-<!-- Afficher les erreurs -->
-<div *ngIf="errorMessage" class="text-red-500 mt-2">
-  {{ errorMessage }}
+      <!-- Email -->
+      <div class="mb-4">
+        <label for="email" class="block text-sm font-medium text-gray-300">Adresse email :</label>
+        <input
+          type="email"
+          id="email"
+          [(ngModel)]="email"
+          name="email"
+          required
+          class="w-full bg-gray-700 text-white border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring focus:ring-blue-500">
+      </div>
+
+      <!-- Mot de passe -->
+      <div class="mb-4">
+        <label for="password" class="block text-sm font-medium text-gray-300">Mot de passe :</label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          required
+          class="w-full bg-gray-700 text-white border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring focus:ring-blue-500">
+      </div>
+
+      <!-- Bouton d'inscription -->
+      <button
+        type="submit"
+        class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-md shadow-lg transition duration-300">
+        S'inscrire
+      </button>
+    </form>
+
+    <!-- Messages d'erreur ou de succès -->
+    <div *ngIf="errorMessage" class="text-red-400 text-center mt-4">
+      {{ errorMessage }}
+    </div>
+    <div *ngIf="successMessage" class="text-green-400 text-center mt-4">
+      {{ successMessage }}
+    </div>
+  </div>
 </div>
 
-<!-- Afficher le message de succès -->
-<div *ngIf="successMessage" class="text-green-500 mt-2">
-    {{ successMessage }}
-</div>
 
 

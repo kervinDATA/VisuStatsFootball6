@@ -1,20 +1,51 @@
-<h2>Page de Connexion</h2>
-<p>Formulaire de connexion pour les utilisateurs.</p>
+<!-- Wrapper principal avec un fond dégradé -->
+<div class="min-h-screen flex flex-col justify-start bg-gradient-to-br from-gray-800 via-gray-700 to-gray-600 text-white py-12">
 
-<!-- Afficher le message d'erreur si la connexion échoue -->
-<div *ngIf="errorMessage" class="text-red-500 mt-2">
-  {{ errorMessage }}
+  <!-- Conteneur du formulaire -->
+  <div class="max-w-md mx-auto bg-gray-800 bg-opacity-80 rounded-lg shadow-lg p-6">
+
+    <!-- Titre principal -->
+    <h2 class="text-2xl font-bold text-yellow-400 text-center mb-4">Connexion</h2>
+    <p class="text-gray-300 text-center mb-6">Connectez-vous pour accéder à vos analyses.</p>
+
+    <!-- Formulaire de connexion -->
+    <form (ngSubmit)="onLogin()">
+
+      <!-- Email -->
+      <div class="mb-4">
+        <label for="email" class="block text-sm font-medium text-gray-300">Adresse email :</label>
+        <input
+          type="text"
+          id="email"
+          [(ngModel)]="email"
+          name="email"
+          required
+          class="w-full bg-gray-700 text-white border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring focus:ring-blue-500">
+      </div>
+
+      <!-- Mot de passe -->
+      <div class="mb-4">
+        <label for="password" class="block text-sm font-medium text-gray-300">Mot de passe :</label>
+        <input
+          type="password"
+          id="password"
+          [(ngModel)]="password"
+          name="password"
+          required
+          class="w-full bg-gray-700 text-white border border-gray-600 rounded-md px-4 py-2 focus:outline-none focus:ring focus:ring-blue-500">
+      </div>
+
+      <!-- Bouton de connexion -->
+      <button
+        type="submit"
+        class="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 rounded-md shadow-lg transition duration-300">
+        Se connecter
+      </button>
+    </form>
+
+    <!-- Message d'erreur -->
+    <div *ngIf="errorMessage" class="text-red-400 text-center mt-4">
+      {{ errorMessage }}
+    </div>
+  </div>
 </div>
-
-<!-- Formulaire de connexion -->
-<form (ngSubmit)="onLogin()">
-  <label for="email">Email :</label>
-  <input type="text" id="email" [(ngModel)]="email" name="email" required class="border p-2 mb-4 block">
-
-  <label for="password">Mot de passe :</label>
-  <input type="password" id="password" [(ngModel)]="password" name="password" required class="border p-2 mb-4 block">
-
-  <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Se Connecter</button>
-</form>
-
-
