@@ -1,73 +1,95 @@
-<div class="controls">
-  <!-- Message d'avertissement si la limite est atteinte -->
-  <div *ngIf="charts.length >= 5" class="warning">
-    <p>Limite atteinte : Vous ne pouvez pas ajouter plus de 5 graphiques.</p>
-  </div>
-  <!-- Bouton pour ajouter un graphique -->
-  <button (click)="addChart()">Ajouter un graphique</button>
-  <!-- Formulaire pour sauvegarder les graphiques -->
-  <div class="save-analysis">
-    <label for="analysis-name">Nom de l’analyse :</label>
-    <input type="text" [(ngModel)]="analysisName" placeholder="Nom de l'analyse" />
+<!-- Wrapper principal avec un fond dégradé -->
+<div class="min-h-screen flex flex-col bg-gradient-to-br from-gray-800 via-gray-700 to-gray-600 text-white">
 
-    <button (click)="saveCurrentAnalysis()">Sauvegarder les graphiques actuels</button>
-  </div>
-</div>
-
-<!-- Bloc pour modifier une analyse existante -->
-<div class="edit-analysis">
-  <label for="edit-analysis-name">Modifier le nom de l’analyse :</label>
-  <input type="text" [(ngModel)]="analysisName" placeholder="Nom de l'analyse" />
-</div>
-
-<!-- Affichage des graphiques -->
-<div class="charts">
-  <div *ngFor="let chart of charts; let i = index" class="chart-container">
-    <!-- Filtres pour chaque graphique -->
-    <div class="filters">
-      <label for="season">Saison :</label>
-      <select [(ngModel)]="chart.selectedSeason" (change)="updateChart(i)">
-        <option *ngFor="let season of seasons" [value]="season">{{ season }}</option>
-      </select>
-
-      <label for="statType">Type de statistique :</label>
-      <select [(ngModel)]="chart.selectedStatType" (change)="updateChart(i)">
-        <option *ngFor="let type of statTypes" [value]="type.route">{{ type.label }}</option>
-      </select>
+  <!-- Liste des analyses sauvegardées -->
+  <div class="saved-analyses p-4 bg-gray-800 bg-opacity-80 rounded-lg shadow-lg mb-6 max-w-6xl mx-auto">
+    <h3 class="text-lg font-bold text-yellow-400 mb-4">Analyses sauvegardées</h3>
+    <div *ngIf="savedAnalyses.length === 0" class="text-gray-300">
+      <p>Aucune analyse sauvegardée pour le moment.</p>
     </div>
+    <ul *ngIf="savedAnalyses.length > 0" class="space-y-4">
+      <li *ngFor="let analysis of savedAnalyses" class="flex items-center justify-between bg-gray-700 p-3 rounded-md shadow">
+        <span class="text-white font-semibold">{{ analysis.name }}</span>
+        <div class="space-x-2">
+          <button (click)="loadAnalysis(analysis)" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">Charger</button>
+          <button (click)="editAnalysis(analysis)" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">Modifier</button>
+          <button (click)="deleteAnalysis(analysis.id)" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded">Supprimer</button>
+        </div>
+      </li>
+    </ul>
+  </div>
 
-    <!-- Graphique -->
-    <div *ngIf="!chart.chartData">
-      <p>Sélectionnez une saison et un type de statistique pour afficher un graphique.</p>
+  <!-- Section pour ajouter un graphique -->
+  <div class="controls p-4 bg-gray-800 bg-opacity-80 rounded-lg shadow-lg mb-6">
+    <h3 class="text-lg font-bold text-yellow-400 mb-4">Ajouter un graphique</h3>
+    <div *ngIf="charts.length >= 5" class="text-red-400 font-semibold mb-4">
+      <p>Limite atteinte : Vous ne pouvez pas ajouter plus de 5 graphiques.</p>
     </div>
-    <div *ngIf="chart.chartData">
-      <apx-chart
-        [series]="chart.chartData.series"
-        [chart]="chart.chartData.chart"
-        [xaxis]="chart.chartData.xaxis"
-        [plotOptions]="chart.chartData.plotOptions"
-        [yaxis]="chart.chartData.yaxis"
-      ></apx-chart>
-    </div>
+    <button (click)="addChart()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow">
+      Ajouter un graphique
+    </button>
+  </div>
 
-    <!-- Bouton pour supprimer le graphique -->
-    <button (click)="removeChart(i)">Supprimer ce graphique</button>
+  <!-- Section pour modifier une analyse -->
+  <div class="edit-analysis p-4 bg-gray-800 bg-opacity-80 rounded-lg shadow-lg mb-6">
+    <h3 class="text-lg font-bold text-yellow-400 mb-4">Modifier le nom de l'analyse</h3>
+    <div class="flex items-center space-x-4">
+      <input
+        type="text"
+        [(ngModel)]="analysisName"
+        placeholder="Nom de l'analyse"
+        class="flex-grow bg-gray-700 text-white px-4 py-2 rounded-md"
+      />
+      <button (click)="saveCurrentAnalysis()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow">
+        Sauvegarder
+      </button>
+    </div>
+  </div>
+
+  <!-- Section Affichage des graphiques -->
+  <div class="charts p-4 bg-gray-800 bg-opacity-80 rounded-lg shadow-lg">
+    <h3 class="text-lg font-bold text-yellow-400 mb-4">Affichage des graphiques</h3>
+    <div *ngFor="let chart of charts; let i = index" class="chart-container mb-6">
+
+      <!-- Conteneur des filtres -->
+      <div class="filters bg-gray-700 p-4 rounded-md mb-4 max-w-4xl mx-auto">
+        <div class="flex flex-col md:flex-row items-center justify-between">
+          <div class="flex items-center space-x-4">
+            <label for="season" class="text-gray-300">Saison :</label>
+            <select [(ngModel)]="chart.selectedSeason" (change)="updateChart(i)" class="bg-gray-600 text-white rounded px-3 py-2">
+              <option *ngFor="let season of seasons" [value]="season">{{ season }}</option>
+            </select>
+          </div>
+          <div class="flex items-center space-x-4 mt-4 md:mt-0">
+            <label for="statType" class="text-gray-300">Type de statistique :</label>
+            <select [(ngModel)]="chart.selectedStatType" (change)="updateChart(i)" class="bg-gray-600 text-white rounded px-3 py-2">
+              <option *ngFor="let type of statTypes" [value]="type.route">{{ type.label }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conteneur du graphique -->
+      <div class="chart-display bg-gray-700 p-6 rounded-md shadow-lg max-w-5xl mx-auto">
+        <div *ngIf="!chart.chartData" class="text-white text-center">
+          <p>Sélectionnez une saison et un type de statistique pour afficher un graphique.</p>
+        </div>
+        <div *ngIf="chart.chartData">
+          <apx-chart
+            [series]="chart.chartData.series"
+            [chart]="chart.chartData.chart"
+            [xaxis]="chart.chartData.xaxis"
+            [plotOptions]="chart.chartData.plotOptions"
+            [yaxis]="chart.chartData.yaxis"
+            style="width: 100%; height: 500px;"
+          ></apx-chart>
+        </div>
+      </div>
+
+      <!-- Bouton pour supprimer un graphique -->
+      <button (click)="removeChart(i)" class="mt-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow">
+        Supprimer ce graphique
+      </button>
+    </div>
   </div>
 </div>
-
-<!-- Liste des analyses sauvegardées -->
-<div class="saved-analyses">
-  <h3>Analyses sauvegardées</h3>
-  <div *ngIf="savedAnalyses.length === 0">
-    <p>Aucune analyse sauvegardée pour le moment.</p>
-  </div>
-  <ul *ngIf="savedAnalyses.length > 0">
-    <li *ngFor="let analysis of savedAnalyses">
-      <span>{{ analysis.name }}</span>
-      <button (click)="loadAnalysis(analysis)">Charger</button>
-      <button (click)="editAnalysis(analysis)">Modifier</button>
-      <button (click)="deleteAnalysis(analysis.id)">Supprimer</button>
-    </li>
-  </ul>
-</div>
-

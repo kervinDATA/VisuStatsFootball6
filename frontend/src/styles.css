@@ -3,3 +3,18 @@
 @tailwind components;
 @tailwind utilities;
 @import 'flowbite';
+
+/* Styles globaux pour ApexCharts */
+.apexcharts-tooltip {
+    background: #f3f3f3 !important; /* Fond clair */
+    color: black !important; /* Texte noir */
+    font-family: Arial, sans-serif;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  }
+  
+  .apexcharts-tooltip-series-group {
+    color: black !important;
+  }
+  

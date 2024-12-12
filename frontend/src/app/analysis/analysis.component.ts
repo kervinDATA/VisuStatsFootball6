@@ -111,16 +111,27 @@ export class AnalysisComponent implements OnInit {
       chart: {
         type: 'bar',
         height: 350,
+        foreColor: '#ffffff',
       },
       xaxis: {
         categories: categories,
         title: {
           text: 'Équipes et Classement',
         },
+        labels: {
+          style: {
+            colors: '#ffffff', // Étiquettes axe X en blanc
+          },
+        },
       },
       yaxis: {
         title: {
           text: 'Ball Possession %',
+        },
+        labels: {
+          style: {
+            colors: '#ffffff', // Étiquettes axe Y en blanc
+          },
         },
       },
       tooltip: {
@@ -131,6 +142,9 @@ export class AnalysisComponent implements OnInit {
       title: {
         text: `Ball Possession % vs Équipes (${this.selectedSeasonName})`,
         align: 'center',
+        style: {
+        colors: '#ffffff',
+        },
       },
     };
   }

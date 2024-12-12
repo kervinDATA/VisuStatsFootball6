@@ -7,6 +7,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { SeasonService } from '../services/season.service';
 import { UserPageService } from '../services/user-page.service';
 import { AuthService } from '../auth.service';
+import { style } from '@angular/animations';
 
 @Component({
   selector: 'app-user-page',
@@ -144,14 +145,26 @@ export class UserPageComponent implements OnInit {
               type: 'bar',
               stacked: true,
               stackType: '100%',
+              foreColor: '#ffffff',
             },
             xaxis: {
               categories: teams,
+              labels: {
+                style: {
+                  colors: '#ffffff', // Étiquettes axe X en blanc
+                },
+              },
             },
             yaxis: {
               title: {
                 text: 'Percentage of Goals',
+                style: {
+                  color: '#ffffff', // Titre axe Y en blanc
+                },
               },
+            },
+            tooltip: {
+              theme: undefined, // Désactive les styles par défaut du thème pour utiliser le CSS
             },
             plotOptions: {
               bar: {
@@ -175,9 +188,24 @@ export class UserPageComponent implements OnInit {
                 data: seriesData,
               },
             ],
-            chart: { type: 'bar' },
+            chart: { type: 'bar', foreColor: '#ffffff', },
             xaxis: {
               categories: categories,
+              labels: {
+                style: {
+                  colors: '#ffffff', // Étiquettes axe X en blanc
+                },
+              },
+            },
+            yaxis: {
+              labels: {
+                style: {
+                  colors: '#ffffff', // Étiquettes axe Y en blanc
+                },
+              },
+            },
+            tooltip: {
+              theme: 'dark', // Infobulles avec texte blanc
             },
           };
         }
