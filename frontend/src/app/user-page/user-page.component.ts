@@ -44,6 +44,9 @@ export class UserPageComponent implements OnInit {
 
   userId: string = ''; // Stocke l'identifiant de l'utilisateur connecté
 
+  isAnalysisLoaded: boolean = false;
+  currentAnalysis: any = null;
+
   constructor(private seasonService: SeasonService, private userPageService: UserPageService, private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
@@ -271,6 +274,8 @@ export class UserPageComponent implements OnInit {
 
 // Charger une analyse sauvegardée spécifique par l'utilisateur
 loadAnalysis(analysis: { id: number; name: string; charts: any[] }): void {
+  this.currentAnalysis = analysis; // Stocker l'analyse chargée
+  this.isAnalysisLoaded = true; // Activer le drapeau
   this.charts = analysis.charts.map((chart) => ({
     selectedSeason: chart.season,
     selectedStatType: chart.statType,
@@ -324,6 +329,8 @@ deleteAnalysis(analysisId: number): void {
       console.log(`Analyse avec ID ${analysisId} supprimée avec succès.`);
       // Supprimer localement pour éviter de recharger depuis le backend
       this.savedAnalyses = this.savedAnalyses.filter((a) => a.id !== analysisId);
+      this.isAnalysisLoaded = false;
+      this.currentAnalysis = null;
     },
     (error) => {
       console.error('Erreur lors de la suppression de l’analyse :', error);
