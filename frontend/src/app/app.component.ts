@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { AuthService } from './auth.service';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { CommonModule } from '@angular/common'; // Importer CommonModule pour *ngIf
 import { ImageService } from './image.service';
+import { filter } from 'rxjs/operators'; // Import pour le filtre RxJS
 
 @Component({
   selector: 'app-root',
@@ -16,6 +17,7 @@ export class AppComponent {
   title = 'frontend';
   notification: string | null = null;
   imageUrl: string | undefined; // Variable pour l'URL du logo
+  isLandingPage: boolean = false; // Variable pour détecter la page actuelle
 
   // Propriétés pour stocker l'email et le mot de passe
   email: string = '';
@@ -25,6 +27,7 @@ export class AppComponent {
 
   ngOnInit(): void {
     this.loadLogo();
+    this.detectLandingPage();
   }
 
   loadLogo(): void {
@@ -37,7 +40,20 @@ export class AppComponent {
       }
     );
   }
+
+  // Détecter si l'utilisateur est sur la landing page
+  detectLandingPage(): void {
+    this.router.events
+      .pipe(filter((event) => event instanceof NavigationEnd)) // Filtrer uniquement les événements NavigationEnd
+      .subscribe((event: any) => {
+        this.isLandingPage = event.url === '/'; // Vérifie si l'URL correspond à la landing page
+      });
+  }
   
+  // Méthode pour revenir à la landing page
+  navigateToHome(): void {
+    this.router.navigate(['/']);
+  }
 
   // Méthode pour gérer la connexion
   login() {

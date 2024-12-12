@@ -7,14 +7,14 @@
     <div *ngIf="savedAnalyses.length === 0" class="text-gray-300">
       <p>Aucune analyse sauvegardée pour le moment.</p>
     </div>
-    <ul *ngIf="savedAnalyses.length > 0" class="space-y-4">
-      <li *ngFor="let analysis of savedAnalyses" class="flex items-center justify-between bg-gray-700 p-3 rounded-md shadow">
+    <div *ngIf="savedAnalyses.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div *ngFor="let analysis of savedAnalyses" class="flex items-center justify-between bg-gray-700 p-3 rounded-md shadow">
         <span class="text-white font-semibold">{{ analysis.name }}</span>
         <button (click)="loadAnalysis(analysis)" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
           Charger
         </button>
-      </li>
-    </ul>
+      </div>
+    </div>
   </div>
 
   <!-- Section pour ajouter un graphique -->

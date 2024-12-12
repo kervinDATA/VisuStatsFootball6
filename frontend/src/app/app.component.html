@@ -1,27 +1,32 @@
 <!-- Zone de Notification -->
 <div *ngIf="notification" class="fixed top-4 right-4 bg-green-500 text-white p-2 rounded shadow-lg">
-    {{ notification }}
-  </div>
-
+  {{ notification }}
+</div>
 
 <!-- Header et Contenu -->
 <header class="flex justify-between items-center p-4 bg-gray-800 text-white shadow-md w-full">
-    <div class="flex items-center">
+  <div class="flex items-center">
       <img *ngIf="imageUrl" [src]="imageUrl" alt="Logo" class="w-12 h-12 mr-2">
       <h1 class="text-xl font-bold">VisuStatsFootball</h1>
-    </div>
-    <nav class="flex gap-2">
+      <!-- Bouton "Retour à la page d'accueil" placé à droite du texte -->
+      <div *ngIf="!isLandingPage" class="ml-10">
+          <button
+              (click)="navigateToHome()"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 text-sm rounded shadow-md transition duration-300">
+              Retour à l'accueil
+          </button>
+      </div>
+  </div>
+  <nav class="flex gap-2">
       <!-- Bouton "Register" visible si non connecté -->
       <button *ngIf="!authService.isLoggedIn()" (click)="goToRegister()" class="px-4 py-2 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md">Register</button>
-      
+
       <!-- Bouton "Login" visible si non connecté -->
       <button *ngIf="!authService.isLoggedIn()" (click)="goToLogin()" class="px-4 py-2 bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md">Login</button>
-      
+
       <!-- Bouton "Logout" visible si connecté -->
       <button *ngIf="authService.isLoggedIn()" (click)="logout()" class="px-4 py-2 bg-red-500 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md">Logout</button>
-    </nav>
-  </header>
-  
-  <router-outlet></router-outlet>
-  
-  
+  </nav>
+</header>
+
+<router-outlet></router-outlet>

@@ -226,8 +226,8 @@ export class UserPageComponent implements OnInit {
       return;
     }
   
-    if (this.savedAnalyses.length >= 10) {
-      console.warn('Vous ne pouvez pas sauvegarder plus de 10 analyses.');
+    if (this.savedAnalyses.length >= 12) {
+      console.warn('Vous ne pouvez pas sauvegarder plus de 12 analyses.');
       return;
     }
   
