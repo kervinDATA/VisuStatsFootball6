@@ -47,6 +47,8 @@ export class UserPageComponent implements OnInit {
   isAnalysisLoaded: boolean = false;
   currentAnalysis: any = null;
 
+  notificationMessage: string | null = null;
+
   constructor(private seasonService: SeasonService, private userPageService: UserPageService, private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
@@ -253,6 +255,7 @@ export class UserPageComponent implements OnInit {
           charts: response.charts,
         });
         this.analysisName = ''; // Réinitialiser le champ
+        this.showNotification('Analyse sauvegardée avec succès.');
       },
       (error) => {
         console.error('Erreur lors de la sauvegarde de l’analyse :', error);
@@ -309,6 +312,7 @@ editAnalysis(analysis: { id: number; name: string; charts: any[] }): void {
     () => {
       console.log(`Analyse "${this.analysisName}" modifiée avec succès.`);
       this.loadSavedAnalyses(); // Recharger les analyses sauvegardées
+      this.showNotification('Analyse modifiée avec succès.');
     },
     (error) => {
       console.error('Erreur lors de la modification de l’analyse :', error);
@@ -336,6 +340,14 @@ deleteAnalysis(analysisId: number): void {
       console.error('Erreur lors de la suppression de l’analyse :', error);
     }
   );
+}
+
+// notofications lors de la sauvegarde ou d'une modification
+showNotification(message: string): void {
+  this.notificationMessage = message;
+  setTimeout(() => {
+    this.notificationMessage = null; // Effacer après 3 secondes
+  }, 3000);
 }
 
 }
