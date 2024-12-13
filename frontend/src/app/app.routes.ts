@@ -6,6 +6,7 @@ import { UserPageComponent } from './user-page/user-page.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { authGuard } from './auth.guard';
+import { AdminPageComponent } from './admin/admin-page.component';
 
 export const routes: Route[] = [
   { path: '', component: LandingComponent },
@@ -13,6 +14,7 @@ export const routes: Route[] = [
   { path: 'analysis', component: AnalysisComponent },
   { path: 'user-page', component: UserPageComponent, canActivate: [authGuard] },
   { path: 'register', component: RegisterComponent },
-  { path: 'login', component: LoginComponent }
+  { path: 'login', component: LoginComponent },
+  { path: 'admin', component: AdminPageComponent, canActivate: [authGuard] }
 ];
 

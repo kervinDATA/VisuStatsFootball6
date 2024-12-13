@@ -18,7 +18,7 @@ const imageRoutes = require('./routes/imageRoutes');
 const standingRoutes = require('./routes/standingRoutes');
 const analysisRoutes = require('./routes/analysisRoutes');
 const userAnalysisRoutes = require('./routes/userAnalysisRoutes');
-
+const adminRoutes = require('./routes/adminRoutes');
 
 const authRoutes = require('./routes/authRoutes'); // Importer les routes d'authentification
 
@@ -52,6 +52,7 @@ app.use('/user-analysis', userAnalysisRoutes);
 app.use('/auth', authRoutes); // Route pour l'authentification
 app.use('/api/images', imageRoutes);
 app.use('/standings', standingRoutes);
+app.use('/admin', adminRoutes);
 
 console.log("Database URL:", process.env.DATABASE_URL);
 
