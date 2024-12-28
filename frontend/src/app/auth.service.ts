@@ -33,7 +33,8 @@ export class AuthService {
 
   // Déconnexion de l'utilisateur
   logout(): void {
-    localStorage.removeItem('token'); // Retire le token du localStorage
+    localStorage.removeItem('token');
+    localStorage.removeItem('user'); // Ajouter cette ligne pour supprimer aussi les infos utilisateur
   }
 
   register(email: string, password: string) {
@@ -47,13 +48,27 @@ export class AuthService {
 
   // Stocker les informations de l'utilisateur dans localStorage
   storeUser(user: any): void {
+    if (!user || !user.id) {
+      console.error('Invalid user object:', user);
+      return;
+    }
+    console.log('Storing user:', user);
     localStorage.setItem('user', JSON.stringify(user));
   }
   
   // Récupérer l'ID de l'utilisateur depuis localStorage
   getUserId(): string | null {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user).id : null;
+    const userStr = localStorage.getItem('user');
+    console.log('Retrieved user from storage:', userStr);
+    if (!userStr) return null;
+    
+    try {
+      const user = JSON.parse(userStr);
+      return user?.id || null;
+    } catch (e) {
+      console.error('Error parsing user data:', e);
+      return null;
+    }
   }
 
 

@@ -27,6 +27,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+
 // Routes principales
 app.use('/players', playerRoutes);
 app.use('/teams', teamRoutes); // Route pour les équipes

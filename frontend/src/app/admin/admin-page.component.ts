@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AdminService } from '../services/admin.service';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-admin-page',
@@ -15,9 +16,25 @@ export class AdminPageComponent implements OnInit {
   stats: { totalUsers: number; totalAnalyses: number } | null = null; // Supprimer activeSessions
   users: { id: string; email: string; role: string }[] = [];
 
-  constructor(private adminService: AdminService, private router: Router) {}
+  constructor(private adminService: AdminService, private router: Router, private authService: AuthService) {}
 
   ngOnInit(): void {
+    if (!this.authService.isLoggedIn()) {
+      console.log('User not logged in');
+      this.router.navigate(['/']);
+      return;
+    }
+
+    const userId = this.authService.getUserId();
+    console.log('Current user trying to access admin:', userId);
+
+    if (!this.adminService.isAuthorizedAdmin()) {
+      console.log('User not authorized for admin');
+      this.router.navigate(['/']);
+      return;
+    }
+
+    console.log('Access granted to admin page');
     this.loadStatistics();
     this.loadUsers();
   }

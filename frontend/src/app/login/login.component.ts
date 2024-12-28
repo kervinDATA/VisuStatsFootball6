@@ -22,8 +22,9 @@ export class LoginComponent {
   onLogin() {
     this.authService.login(this.email, this.password).subscribe({
       next: (response) => {
-        this.authService.storeToken(response.token); // Stocker le token JWT
-        this.authService.storeUser(response.user); // Stocker l'utilisateur connecté
+        console.log('Login response:', response);
+        this.authService.storeToken(response.token);
+        this.authService.storeUser(response.user);
   
         console.log('Connexion réussie !');
         this.appComponent.showNotification('Connexion réussie !');
