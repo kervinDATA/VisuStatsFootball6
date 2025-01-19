@@ -52,6 +52,7 @@ export class AnalysisComponent implements OnInit {
     console.log('Saison sélectionnée :', this.selectedSeasonName);
     this.loadStatsForSeason(seasonName);
     this.loadDangerousAttackStats(seasonName);
+    this.loadGoalsIntervalDistribution(seasonName);
   }
 
   // Charger les données pour la première analyse (Possession vs Classement)
@@ -234,6 +235,7 @@ export class AnalysisComponent implements OnInit {
 
 
   updatePieCharts(data: any[]) {
+    console.log('Mise à jour des graphiques avec la saison :', this.selectedSeasonName);
     const celticData = data.filter((item) => item.team_name === 'Celtic');
     const rangersData = data.filter((item) => item.team_name === 'Rangers');
 
@@ -246,6 +248,8 @@ export class AnalysisComponent implements OnInit {
         type: 'pie',
         height: 350,
         foreColor: '#ffffff',
+        zoom: { enabled: false }, // Désactiver le zoom
+        animations: { enabled: false }, // Désactiver les animations
       },
       labels: celticData.map((item) => item.interval_time),
       title: {
@@ -260,6 +264,8 @@ export class AnalysisComponent implements OnInit {
         type: 'pie',
         height: 350,
         foreColor: '#ffffff',
+        zoom: { enabled: false }, // Désactiver le zoom
+        animations: { enabled: false }, // Désactiver les animations
       },
       labels: rangersData.map((item) => item.interval_time),
       title: {
