@@ -1,6 +1,13 @@
 <!-- Wrapper principal -->
 <div class="min-h-screen bg-gradient-to-br from-gray-800 via-gray-700 to-gray-600 text-white p-8">
 
+  <!-- Zone de notification -->
+  <div *ngIf="notificationMessage" 
+    class="fixed top-4 right-4 p-4 rounded shadow-lg z-50 text-white"
+    [style.backgroundColor]="notificationType === 'success' ? 'green' : 'red'">
+    {{ notificationMessage }}
+</div>
+
     <!-- Titre principal -->
     <h1 class="text-2xl font-bold text-yellow-400 mb-6 text-center">Page Administrateur</h1>
   

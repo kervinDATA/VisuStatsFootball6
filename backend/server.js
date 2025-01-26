@@ -1,11 +1,13 @@
 const express = require('express');
 const cors = require('cors');
-const pool = require('./config/db'); // Importer le pool depuis db.js
-const playerRoutes = require('./routes/playerRoutes'); // Importer le routeur des joueurs
-const teamRoutes = require('./routes/teamRoutes'); // Importer le routeur des équipes
+const app = express();
+
+// Import des routes
+const playerRoutes = require('./routes/playerRoutes');
+const teamRoutes = require('./routes/teamRoutes');
 const fixtureRoutes = require('./routes/fixtureRoutes');
 const seasonRoutes = require('./routes/seasonRoutes');
-const teamStatsRoutes = require('./routes/teamStatsRoutes'); // Routes pour les statistiques d'équipes
+const teamStatsRoutes = require('./routes/teamStatsRoutes');
 const factTeams1Routes = require('./routes/factTeams1Routes');
 const factTeams2Routes = require('./routes/factTeams2Routes');
 const factTeams3Routes = require('./routes/factTeams3Routes');
@@ -14,58 +16,54 @@ const factTeams5Routes = require('./routes/factTeams5Routes');
 const factTeams6Routes = require('./routes/factTeams6Routes');
 const venuesRoutes = require('./routes/venuesRoutes');
 const scoresRoutes = require('./routes/scoresRoutes');
-const imageRoutes = require('./routes/imageRoutes'); 
+const imageRoutes = require('./routes/imageRoutes');
 const standingRoutes = require('./routes/standingRoutes');
 const analysisRoutes = require('./routes/analysisRoutes');
 const userAnalysisRoutes = require('./routes/userAnalysisRoutes');
 const adminRoutes = require('./routes/adminRoutes');
+const authRoutes = require('./routes/authRoutes');
 
-const authRoutes = require('./routes/authRoutes'); // Importer les routes d'authentification
+// Configuration de CORS
+app.use(cors({ origin: '*' }));
 
-const app = express();
-
-app.use(cors());
+// Middleware pour parser les JSON
 app.use(express.json());
 
+// Logger pour chaque requête (pour diagnostiquer)
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
 
 // Routes principales
 app.use('/players', playerRoutes);
-app.use('/teams', teamRoutes); // Route pour les équipes
+app.use('/teams', teamRoutes);
 app.use('/fixtures', fixtureRoutes);
 app.use('/seasons', seasonRoutes);
 app.use('/venues', venuesRoutes);
 app.use('/scores', scoresRoutes);
-
-// Route pour les statistiques d'équipe, sans paramètre dynamique dans app.use
-app.use('/teams', teamStatsRoutes);
-
+app.use('/teams/stats', teamStatsRoutes);
 app.use('/fact-teams1', factTeams1Routes);
 app.use('/fact-teams2', factTeams2Routes);
 app.use('/fact-teams3', factTeams3Routes);
 app.use('/fact-teams4', factTeams4Routes);
 app.use('/fact-teams5', factTeams5Routes);
 app.use('/fact-teams6', factTeams6Routes);
-
 app.use('/api/analysis', analysisRoutes);
 app.use('/user-analysis', userAnalysisRoutes);
-
-
-app.use('/auth', authRoutes); // Route pour l'authentification
+app.use('/auth', authRoutes);
 app.use('/api/images', imageRoutes);
 app.use('/standings', standingRoutes);
 app.use('/admin', adminRoutes);
 
-console.log("Database URL:", process.env.DATABASE_URL);
-
-// Middleware de gestion d'erreur global
+// Middleware de gestion d'erreurs global
 app.use((err, req, res, next) => {
-  console.error(err.stack);
+  console.error('Erreur capturée dans le middleware global :', err.stack);
   res.status(500).json({ error: 'Une erreur serveur est survenue.' });
 });
 
-
-// Démarrer le serveur
+// Vérification du bon démarrage de l'application
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+  console.log(`Serveur démarré sur le port ${PORT}`);
 });

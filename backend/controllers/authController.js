@@ -1,10 +1,19 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const validator = require('validator'); // Importer Validator.js
 const pool = require('../config/db');
 
 // Contrôleur pour l'inscription
 exports.register = async (req, res) => {
   const { email, password } = req.body;
+
+  // Validation des entrées
+  if (!email || !validator.isEmail(email)) {
+    return res.status(400).json({ message: 'Adresse email invalide' });
+  }
+  if (!password || !validator.isLength(password, { min: 6 })) {
+    return res.status(400).json({ message: 'Le mot de passe doit contenir au moins 6 caractères' });
+  }
 
   try {
     const userExists = await pool.query('SELECT * FROM dev_app_foot.users WHERE email = $1', [email]);
@@ -32,17 +41,25 @@ exports.login = async (req, res) => {
 
   try {
     const userExists = await pool.query('SELECT * FROM dev_app_foot.users WHERE email = $1', [email]);
+
     if (userExists.rows.length === 0) {
       return res.status(401).json({ message: 'Utilisateur non trouvé' });
     }
 
     const user = userExists.rows[0];
     const isMatch = await bcrypt.compare(password, user.password);
+
     if (!isMatch) {
       return res.status(401).json({ message: 'Mot de passe incorrect' });
     }
 
-    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    // Ajoutez l'ID utilisateur dans le token
+    const token = jwt.sign(
+      { id: user.id.trim() }, // Assurez-vous que l'ID est propre
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+
     res.status(200).json({ user, token });
   } catch (err) {
     console.error('Erreur lors de la connexion:', err);

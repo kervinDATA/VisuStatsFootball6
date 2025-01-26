@@ -48,6 +48,7 @@ export class UserPageComponent implements OnInit {
   currentAnalysis: any = null;
 
   notificationMessage: string | null = null;
+  notificationType: 'success' | 'error' = 'success'; // Type de notification
 
   constructor(private seasonService: SeasonService, private userPageService: UserPageService, private authService: AuthService, private router: Router) {}
 
@@ -77,6 +78,12 @@ export class UserPageComponent implements OnInit {
   }
 
   addChart(): void {
+    if (!this.seasons.length) {
+      console.warn('Aucune saison disponible pour ajouter un graphique.');
+      //this.showNotification('Veuillez attendre le chargement des saisons.');
+      return;
+    }
+
     if (this.charts.length >= 5) {
       console.warn('Vous ne pouvez pas ajouter plus de 5 graphiques.');
       return;
@@ -223,8 +230,20 @@ export class UserPageComponent implements OnInit {
 
   // Sauvegarder les graphiques actuels
   saveCurrentAnalysis(): void {
+    if (this.charts.some(chart => !chart.selectedSeason || !chart.selectedStatType)) {
+      console.warn('Chaque graphique doit avoir une saison et un type de statistique sélectionné.');
+      this.showNotification('Veuillez compléter les informations pour tous les graphiques.');
+      return;
+    }
+
     if (!this.analysisName.trim()) {
-      console.warn('Le nom de l’analyse est obligatoire.');
+      console.warn('Le nom de l analyse est obligatoire.');
+      if (!this.analysisName.trim()) {
+        console.warn('Le nom de l analyse est obligatoire.');
+        this.showNotification('Le nom de l\'analyse est obligatoire.', 'error');
+        return;
+      }
+      this.showNotification('Le nom de l\'analyse est obligatoire.', 'error');
       return;
     }
   
@@ -255,7 +274,7 @@ export class UserPageComponent implements OnInit {
           charts: response.charts,
         });
         this.analysisName = ''; // Réinitialiser le champ
-        this.showNotification('Analyse sauvegardée avec succès.');
+        this.showNotification('Analyse sauvegardée avec succès.', 'success');
       },
       (error) => {
         console.error('Erreur lors de la sauvegarde de l’analyse :', error);
@@ -290,6 +309,12 @@ loadAnalysis(analysis: { id: number; name: string; charts: any[] }): void {
 
 // Modifier une analyse existante
 editAnalysis(analysis: { id: number; name: string; charts: any[] }): void {
+  if (this.charts.some(chart => !chart.selectedSeason || !chart.selectedStatType)) {
+    console.warn('Chaque graphique doit avoir une saison et un type de statistique sélectionné avant modification.');
+    this.showNotification('Veuillez compléter les informations pour tous les graphiques.');
+    return;
+  }
+
   if (!this.analysisName.trim()) {
     console.warn('Le nom de l’analyse est obligatoire pour la modification.');
     return;
@@ -331,6 +356,7 @@ deleteAnalysis(analysisId: number): void {
   this.userPageService.deleteAnalysis(analysisId).subscribe(
     () => {
       console.log(`Analyse avec ID ${analysisId} supprimée avec succès.`);
+      this.showNotification('Analyse supprimée avec succès.', 'success');
       // Supprimer localement pour éviter de recharger depuis le backend
       this.savedAnalyses = this.savedAnalyses.filter((a) => a.id !== analysisId);
       this.isAnalysisLoaded = false;
@@ -343,10 +369,11 @@ deleteAnalysis(analysisId: number): void {
 }
 
 // notofications lors de la sauvegarde ou d'une modification
-showNotification(message: string): void {
-  this.notificationMessage = message;
+showNotification(message: string, type: 'success' | 'error' = 'success'): void {
+  this.notificationMessage = message; // Définit le message
+  this.notificationType = type; // Définit le type (success ou error)
   setTimeout(() => {
-    this.notificationMessage = null; // Effacer après 3 secondes
+    this.notificationMessage = null; // Efface la notification après 3 secondes
   }, 3000);
 }
 

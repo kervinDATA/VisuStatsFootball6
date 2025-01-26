@@ -1,6 +1,13 @@
 <!-- Wrapper principal avec un fond dégradé -->
 <div class="min-h-screen flex flex-col bg-gradient-to-br from-gray-800 via-gray-700 to-gray-600 text-white">
 
+  <!-- Zone de notification -->
+  <div *ngIf="notificationMessage" 
+  [style.backgroundColor]="notificationType === 'success' ? 'green' : 'red'"
+  style="color: white; padding: 1rem; position: fixed; top: 1rem; right: 1rem; border-radius: 8px; z-index: 1000; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
+  {{ notificationMessage }}
+  </div>
+
   <!-- Liste des analyses sauvegardées -->
   <div class="saved-analyses p-4 bg-gray-800 bg-opacity-80 rounded-lg shadow-lg mb-6 max-w-6xl mx-auto">
     <h3 class="text-lg font-bold text-yellow-400 mb-4">Analyses sauvegardées</h3>
@@ -108,9 +115,11 @@
   <div *ngIf="notificationMessage" class="fixed top-4 right-4 bg-green-500 text-white p-2 rounded shadow-lg z-50">
     {{ notificationMessage }}
   </div>
+
 </div>
 
-<!-- Footer -->
-<footer class="text-center p-2 bg-gray-800 text-gray-300 w-full">
-  <p>© 2024 VisuStatsFootball - Tous droits réservés.</p>
-</footer>
+
+  <!-- Footer -->
+  <footer class="text-center p-2 bg-gray-800 text-gray-300 w-full">
+    <p>© 2024 VisuStatsFootball - Tous droits réservés.</p>
+  </footer>
