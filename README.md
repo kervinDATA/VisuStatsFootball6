@@ -1,6 +1,10 @@
 # VisuStatsFootball
 
-VisuStatsFootball est une application web spécialisée dans l'analyse et la visualisation des statistiques de la Scottish Professional Football League (SPFL). Cette application a pour objectif de démocratiser l'analyse des performances des équipes et des joueurs grâce à des graphiques interactifs et des tableaux de données accessibles aux fans de football.
+VisuStatsFootball est une application web spécialisée dans l'analyse et la visualisation des statistiques de la Scottish Professional Football League (SPFL). 
+
+Cette application a pour objectif de démocratiser l'analyse des performances des équipes et des joueurs grâce à des graphiques interactifs et des tableaux de données accessibles aux fans de football.
+
+
 
 
 ## 🚀 Fonctionnalités principales
@@ -38,16 +42,17 @@ Conteneurisation : Docker, Docker Compose
 
 ## 🐳 Lancement de l'application (via Docker)
 
-Cloner le dépôt :
+#### Cloner le dépôt :
 
 git clone https://github.com/votre-repo/VisuStatsFootball.git
+
 cd VisuStatsFootball
 
-Construire et lancer les conteneurs :
+#### Construire et lancer les conteneurs :
 
 docker-compose up --build
 
-Accéder à l'application :
+#### Accéder à l'application :
 
 Frontend : http://localhost:4200
 
@@ -59,10 +64,15 @@ Backend API : http://localhost:5002
 Créez un fichier .env dans le dossier backend/ :
 
 PORT=5000
+
 SUPABASE_URL=Votre_URL_Supabase
+
 SUPABASE_KEY=Votre_Clé_API_Supabase
+
 DATABASE_URL=Votre_URL_Base_de_Données_PostgreSQL
+
 JWT_SECRET=Votre_Clé_Secrète
+
 
 
 ## 📊 Endpoints API principaux
@@ -79,4 +89,5 @@ Administration : /admin/statistics, /admin/users
 Les tests unitaires sont implémentés avec Jest.
 
 cd backend
+
 npm run test
