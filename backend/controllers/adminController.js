@@ -21,7 +21,6 @@ exports.getGlobalStatistics = async (req, res) => {
   }
 };
 
-
 // Contrôleur pour récupérer les utilisateurs
 exports.getUsers = async (req, res) => {
   try {
@@ -34,13 +33,17 @@ exports.getUsers = async (req, res) => {
   }
 };
 
-
 // Contrôleur pour supprimer un utilisateur
 exports.deleteUser = async (req, res) => {
   try {
     const userId = req.params.id; // Récupère l'ID depuis les paramètres de la requête
     const query = 'DELETE FROM dev_app_foot.users WHERE id = $1'; // Requête SQL
-    await db.query(query, [userId]); // Exécute la suppression
+    const result = await db.query(query, [userId]); // Exécute la suppression
+
+    if (result.rowCount === 0) {
+      return res.status(404).json({ message: "Utilisateur non trouvé." });
+    }
+
     res.status(200).json({ message: 'Utilisateur supprimé avec succès.' });
   } catch (error) {
     console.error('Erreur lors de la suppression de l’utilisateur :', error);
