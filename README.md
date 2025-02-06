@@ -84,6 +84,7 @@ Statistiques : /players, /teams, /fixtures, /analysis, /user-analysis
 Administration : /admin/statistics, /admin/users
 
 
+
 ## ✅ Tests
 
 Les tests unitaires sont implémentés avec Jest.
