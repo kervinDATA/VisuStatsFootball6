@@ -1,0 +1,119 @@
+name: CI Tests
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+  pull_request:
+    branches:
+      - master
+      - develop
+
+jobs:
+  test-backend:
+    name: Test Backend (Node.js)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm install
+
+      - name: Configure database URL for tests
+        run: echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/testdb" > backend/.env
+
+      - name: Run backend tests
+        working-directory: backend
+        run: npm test
+
+  test-frontend:
+    name: Test Frontend (Angular)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies (force legacy peer deps)
+        working-directory: frontend
+        run: npm install --legacy-peer-deps
+
+      - name: Run specific frontend tests
+        working-directory: frontend
+        run: npm run test -- --watch=false --browsers=ChromeHeadless --include=src/app/auth.service.spec.ts --include=src/app/login/login.component.spec.ts
+
+  build:
+    name: Build Backend & Frontend
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      # Build du Backend
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm install
+
+      - name: Build backend
+        working-directory: backend
+        run: npm run build || echo "Pas de build nécessaire pour le backend"
+
+      # Build du Frontend
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm install --legacy-peer-deps
+
+      - name: Build frontend
+        working-directory: frontend
+        run: npm run build -- --configuration=production
+
+  docker-build:
+    name: Build Docker Images
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Build du backend
+      - name: Build Backend Docker Image
+        working-directory: backend
+        run: docker build -t backend-app .
+
+      # Build du frontend
+      - name: Build Frontend Docker Image
+        working-directory: frontend
+        run: docker build -t frontend-app .
+

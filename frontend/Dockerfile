@@ -1,4 +1,4 @@
-# Étape 1 : Construire l'application Angular
+# Construire l'application Angular
 FROM node:18 as build
 
 WORKDIR /app
@@ -11,7 +11,7 @@ COPY . .
 
 RUN npm run build -- --output-path=dist/frontend/browser
 
-# Étape 2 : Utiliser Nginx pour servir l'application
+# Utiliser Nginx pour servir l'application
 FROM nginx:alpine
 
 # Copie de la configuration Nginx personnalisée
