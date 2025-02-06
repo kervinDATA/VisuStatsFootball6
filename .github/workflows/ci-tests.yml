@@ -39,9 +39,9 @@ jobs:
         with:
           node-version: 18
 
-      - name: Install backend dependencies
+      - name: Install backend dependencies (clean install)
         working-directory: backend
-        run: npm install
+        run: npm ci
 
       - name: Configure database URL for tests
         run: echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/testdb" > backend/.env
