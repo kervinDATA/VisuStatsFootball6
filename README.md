@@ -75,6 +75,7 @@ JWT_SECRET=Votre_Clé_Secrète
 
 
 
+
 ## 📊 Endpoints API principaux
 
 Authentification : /auth/register, /auth/login
