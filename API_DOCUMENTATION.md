@@ -221,13 +221,3 @@ node server.js
 ✅ Toujours tester avec **Postman** avant d'intégrer dans une application.
 ✅ Respecter les formats de requêtes et de réponses JSON.
 ✅ Gérer les erreurs (400, 404, 500) correctement.
-
----
-
-## 📩 Contact & Contributeurs
-👨‍💻 **Développeur** : @ton-nom-github  
-📌 **Répo GitHub** : [Lien vers le repo](https://github.com/ton-utilisateur/VisuStatsFootball6)  
-📩 **Email** : contact@example.com  
-
-🚀 **Merci d'utiliser l'API VisuStatsFootball !** 🎯
-
