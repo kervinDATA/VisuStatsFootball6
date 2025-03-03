@@ -1,0 +1,472 @@
+openapi: 3.0.0
+info:
+  title: VisuStatsFootball API
+  version: "1.0.0"
+  description: Documentation de l'API REST pour VisuStatsFootball
+servers:
+  - url: http://localhost:5002
+    description: Serveur local en développement
+
+paths:
+
+  ############################
+  #           ADMIN
+  ############################
+  /admin/statistics:
+    get:
+      summary: Récupère les statistiques globales
+      tags: [Admin]
+      responses:
+        "200":
+          description: Statistiques globales (nombre users, analyses)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalUsers:
+                    type: integer
+                  totalAnalyses:
+                    type: integer
+        "500":
+          description: Erreur serveur
+
+  /admin/users:
+    get:
+      summary: Récupère la liste des utilisateurs
+      tags: [Admin]
+      responses:
+        "200":
+          description: Tableau des utilisateurs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        "500":
+          description: Erreur serveur
+
+  /admin/users/{id}:
+    delete:
+      summary: Supprime un utilisateur
+      tags: [Admin]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          description: ID de l'utilisateur à supprimer
+      responses:
+        "200":
+          description: Utilisateur supprimé
+        "404":
+          description: Utilisateur non trouvé
+        "500":
+          description: Erreur serveur
+
+
+  ############################
+  #           ANALYSE DU SITE
+  ############################
+  /api/analysis/seasons:
+    get:
+      summary: Récupère la liste des saisons
+      tags: [Analyses du site]
+      responses:
+        "200":
+          description: retourne un tableau des saisons
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    season_id:
+                      type: integer
+                    season_name:
+                      type: string        
+        "500":
+          description: Erreur serveur
+
+  /api/analysis/stats:
+    get:
+      summary: Récupère la possession de balle et le classement pour une saison
+      tags: [Analyses du site]
+      parameters:
+        - name: season_name
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Tableau des stats de possession
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    team_id:
+                      type: integer
+                    ball_possession:
+                      type: string
+                    team_position:
+                      type: integer
+                    team_name:
+                      type: string
+        "400":
+          description: Paramètre season_name manquant
+        "500":
+          description: Erreur serveur
+
+  /api/analysis/dangerous-attacks-stats:
+    get:
+      summary: Récupère les stats d'attaques dangereuses et de buts
+      tags: [Analyses du site]
+      parameters:
+        - name: season_name
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Tableau des stats (attaques dangereuses, buts)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    team_id:
+                      type: integer
+                    team_name:
+                      type: string
+                    dangerous_attacks:
+                      type: integer
+                    goals_scored:
+                      type: integer
+                    team_position:
+                      type: integer
+                    season_name:
+                      type: string
+        "400":
+          description: Paramètre season_name manquant
+        "500":
+          description: Erreur serveur
+
+  /api/analysis/goals-interval-distribution:
+    get:
+      summary: Répartition des buts par intervalle (Celtic & Rangers)
+      tags: [Analyses du site]
+      parameters:
+        - name: season_name
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Tableau des stats (buts par intervalle)
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/IntervalGoals"
+              example:
+              - team_name: "Celtic"
+                interval_time: "0-15"
+                goals_percentage: "12.5%"
+              - team_name: "Rangers"
+                interval_time: "15-30"
+                goals_percentage: "8.3%"
+        "400":
+          description: Paramètre season_name manquant
+        "500":
+          description: Erreur serveur
+
+
+  ############################
+  #           Equipes
+  ############################
+  /teams:
+    get:
+      summary: Récupère la liste de toutes les équipes
+      tags: [Teams Stats]
+      responses:
+        "200":
+          description: Tableau des équipes
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    team_id:
+                      type: integer
+                    name:
+                      type: string
+        "500":
+          description: Erreur serveur
+
+  /teams/{id}/basic:
+    get:
+      summary: Récupère les informations basiques d'une équipe spécifique
+      tags: [Teams Stats]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'équipe
+      responses:
+        "200":
+          description: Objet contenant les informations basiques de l'équipe
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  team_id:
+                    type: integer
+                  name:
+                    type: string
+        "404":
+          description: Équipe non trouvée
+        "500":
+          description: Erreur serveur
+
+  /teams/{id}/details:
+    get:
+      summary: Récupère les informations détaillées d'une équipe spécifique
+      tags: [Teams Stats]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'équipe
+      responses:
+        "200":
+          description: Objet contenant les informations détaillées de l'équipe
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  team_id:
+                    type: integer
+                  name:
+                    type: string
+                  image:
+                    type: string
+                    description: Chemin ou URL de l'image
+                  founded:
+                    type: integer
+                  stadium:
+                    type: string
+                  city:
+                    type: string
+                  capacity:
+                    type: integer
+        "404":
+          description: Équipe non trouvée
+        "500":
+          description: Erreur serveur
+
+  /teams/{id}/image:
+    get:
+      summary: Récupère l'image d'une équipe
+      tags: [Teams Stats]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'équipe
+      responses:
+        "200":
+          description: Objet contenant le chemin ou l'URL de l'image
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  image:
+                    type: string
+        "404":
+          description: Équipe non trouvée
+        "500":
+          description: Erreur serveur
+
+
+  ############################
+  #           Analyses utilisateurs
+  ############################
+  /user-analysis/save:
+    post:
+      summary: Sauvegarde une analyse utilisateur
+      tags: [User Analysis]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserAnalysis"
+      responses:
+        "200":
+          description: Analyse sauvegardée avec succès
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserAnalysis"
+        "400":
+          description: Paramètres manquants (name, charts, user_id)
+        "500":
+          description: Erreur serveur
+
+  /user-analysis/saved-analyses:
+    get:
+      summary: Récupère les analyses sauvegardées d'un utilisateur
+      tags: [User Analysis]
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: string
+          description: ID de l'utilisateur
+      responses:
+        "200":
+          description: Liste des analyses sauvegardées
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/UserAnalysis"
+        "400":
+          description: Paramètre manquant (user_id)
+        "500":
+          description: Erreur serveur
+
+  /user-analysis/update/{id}:
+    put:
+      summary: Met à jour une analyse existante
+      tags: [User Analysis]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'analyse à mettre à jour
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserAnalysis"
+      responses:
+        "200":
+          description: Analyse mise à jour avec succès
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserAnalysis"
+        "400":
+          description: Paramètres manquants (id, name, charts, user_id)
+        "404":
+          description: Analyse non trouvée
+        "500":
+          description: Erreur serveur
+
+  /user-analysis/delete/{id}:
+    delete:
+      summary: Supprime une analyse existante
+      tags: [User Analysis]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: ID de l'analyse à supprimer
+      responses:
+        "200":
+          description: Analyse supprimée avec succès
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  deletedAnalysis:
+                    $ref: "#/components/schemas/UserAnalysis"
+        "400":
+          description: Paramètre manquant (id)
+        "404":
+          description: Analyse non trouvée
+        "500":
+          description: Erreur serveur
+
+
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+        role:
+          type: string
+
+    IntervalGoals:
+      type: object
+      properties:
+        team_name:
+          type: string
+        interval_time:
+          type: string
+        goals_percentage:
+          type: string
+    
+    UserAnalysis:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: ID unique de l'analyse
+        name:
+          type: string
+          description: Nom de l'analyse
+        charts:
+          type: array
+          description: Données des graphiques
+          items:
+            type: object
+            properties:
+              season:
+                type: string
+              statType:
+                type: string
+              chartData:
+                type: object
+        user_id:
+          type: string
+          description: ID de l'utilisateur

@@ -22,6 +22,7 @@ const analysisRoutes = require('./routes/analysisRoutes');
 const userAnalysisRoutes = require('./routes/userAnalysisRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const authRoutes = require('./routes/authRoutes');
+const { setupSwagger } = require('./swagger/swagger.js');
 
 // Configuration de CORS
 app.use(cors({ origin: '*' }));
@@ -55,6 +56,10 @@ app.use('/auth', authRoutes);
 app.use('/api/images', imageRoutes);
 app.use('/standings', standingRoutes);
 app.use('/admin', adminRoutes);
+
+console.log('=== AVANT setupSwagger ===');
+setupSwagger(app);
+console.log('=== APRES setupSwagger ===');
 
 // Middleware de gestion d'erreurs global
 app.use((err, req, res, next) => {

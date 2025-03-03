@@ -53,9 +53,9 @@ exports.login = async (req, res) => {
       return res.status(401).json({ message: 'Mot de passe incorrect' });
     }
 
-    // Ajoutez l'ID utilisateur dans le token
+    // Ajouter l'ID utilisateur dans le token
     const token = jwt.sign(
-      { id: user.id.trim() }, // Assurez-vous que l'ID est propre
+      { id: user.id.trim() }, 
       process.env.JWT_SECRET,
       { expiresIn: '1h' }
     );
