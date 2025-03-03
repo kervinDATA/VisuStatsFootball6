@@ -4,8 +4,8 @@ info:
   version: "1.0.0"
   description: Documentation de l'API REST pour VisuStatsFootball
 servers:
-  - url: http://localhost:5002
-    description: Serveur local en développement
+  - url: https://api-en-local.com
+    description: API en local (non accessible en ligne)
 
 paths:
 
