@@ -1,23 +1,35 @@
-<!-- Wrapper principal avec un fond dégradé -->
-<div class="min-h-screen flex flex-col bg-gradient-to-br from-gray-800 via-gray-700 to-gray-600 text-white">
+<!-- Wrapper principal en conservant min-h-screen, flex, etc. -->
+<div class="min-h-screen flex flex-col bg-[#0A0F1D] text-white">
 
   <!-- Zone de notification -->
-  <div *ngIf="notificationMessage" 
-  [style.backgroundColor]="notificationType === 'success' ? 'green' : 'red'"
-  style="color: white; padding: 1rem; position: fixed; top: 1rem; right: 1rem; border-radius: 8px; z-index: 1000; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);">
-  {{ notificationMessage }}
+  <div
+    *ngIf="notificationMessage" 
+    [style.backgroundColor]="notificationType === 'success' ? 'green' : 'red'"
+    style="color: white; padding: 1rem; position: fixed; top: 1rem; right: 1rem; border-radius: 8px; z-index: 1000; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);"
+  >
+    {{ notificationMessage }}
   </div>
 
   <!-- Liste des analyses sauvegardées -->
-  <div class="saved-analyses p-4 bg-gray-800 bg-opacity-80 rounded-lg shadow-lg mb-6 max-w-6xl mx-auto">
+  <!-- On ne touche pas à la disposition : même classes, mêmes tailles -->
+  <div class="saved-analyses p-4 bg-[#1E293B] bg-opacity-80 rounded-lg shadow-lg mb-6 max-w-6xl mx-auto">
     <h3 class="text-lg font-bold text-yellow-400 mb-4">Analyses sauvegardées</h3>
     <div *ngIf="savedAnalyses.length === 0" class="text-gray-300">
       <p>Aucune analyse sauvegardée pour le moment.</p>
     </div>
     <div *ngIf="savedAnalyses.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <div *ngFor="let analysis of savedAnalyses" class="flex items-center justify-between bg-gray-700 p-3 rounded-md shadow">
+      <div *ngFor="let analysis of savedAnalyses" class="flex items-center justify-between bg-[#111827] p-3 rounded-md shadow">
         <span class="text-white font-semibold">{{ analysis.name }}</span>
-        <button (click)="loadAnalysis(analysis)" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+        <button
+          (click)="loadAnalysis(analysis)"
+          class="
+            bg-green-500 hover:bg-green-600 text-white
+            px-2 py-1 text-sm
+            md:px-3 md:py-1 md:text-base
+            rounded
+            focus:outline-none focus:ring-4 focus:ring-green-300
+          "
+        >
           Charger
         </button>
       </div>
@@ -25,62 +37,101 @@
   </div>
 
   <!-- Section pour ajouter un graphique -->
-  <div class="controls p-4 bg-gray-800 bg-opacity-80 rounded-lg shadow-lg mb-6">
+  <div class="controls p-4 bg-[#1E293B] bg-opacity-80 rounded-lg shadow-lg mb-6">
     <h3 class="text-lg font-bold text-yellow-400 mb-4">Ajouter un graphique</h3>
     <div *ngIf="charts.length >= 5" class="text-red-400 font-semibold mb-4">
       <p>Limite atteinte : Vous ne pouvez pas ajouter plus de 5 graphiques.</p>
     </div>
-    <button (click)="addChart()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow">
+    <button
+      (click)="addChart()"
+      class="
+            bg-blue-500 hover:bg-blue-600 text-white 
+            px-2 py-1 text-sm 
+            md:px-4 md:py-2 md:text-base
+            rounded shadow
+            focus:outline-none focus:ring-4 focus:ring-blue-300"
+    >
       Ajouter un graphique
     </button>
   </div>
 
   <!-- Section pour modifier une analyse -->
-  <div class="edit-analysis p-4 bg-gray-800 bg-opacity-80 rounded-lg shadow-lg mb-6">
+  <div class="edit-analysis p-4 bg-[#1E293B] bg-opacity-80 rounded-lg shadow-lg mb-6">
     <h3 class="text-lg font-bold text-yellow-400 mb-4">Nom de l'analyse</h3>
-    <div class="flex items-center space-x-4">
+    <div class="flex flex-wrap md:flex-nowrap items-center gap-4">
       <input
         type="text"
         [(ngModel)]="analysisName"
         placeholder="Nom de l'analyse"
-        class="flex-grow bg-gray-700 text-white px-4 py-2 rounded-md"
+        class="flex-grow bg-[#111827] text-white px-4 py-2 rounded-md 
+               focus:outline-none focus:ring-4 focus:ring-yellow-300"
       />
-      <button (click)="saveCurrentAnalysis()" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow">
+      <button
+        (click)="saveCurrentAnalysis()"
+        class="
+              bg-green-500 hover:bg-green-600 text-white 
+              px-2 py-1 text-sm
+              md:px-4 md:py-2 md:text-base
+              rounded shadow
+              focus:outline-none focus:ring-4 focus:ring-green-300"
+      >
         Sauvegarder
       </button>
       <!-- Boutons Modifier et Supprimer -->
       <button
         *ngIf="isAnalysisLoaded"
         (click)="editAnalysis(currentAnalysis)"
-        class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow">
+        class="
+              bg-blue-500 hover:bg-blue-600 text-white 
+              px-2 py-1 text-sm
+              md:px-4 md:py-2 md:text-base
+              rounded shadow
+              focus:outline-none focus:ring-4 focus:ring-blue-300"
+      >
         Modifier
       </button>
       <button
         *ngIf="isAnalysisLoaded"
         (click)="deleteAnalysis(currentAnalysis.id)"
-        class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow">
+        class="
+              bg-red-500 hover:bg-red-600 text-white 
+              px-2 py-1 text-sm
+              md:px-4 md:py-2 md:text-base
+              rounded shadow
+              focus:outline-none focus:ring-4 focus:ring-red-300"
+      >
         Supprimer
       </button>
     </div>
   </div>
 
   <!-- Section Affichage des graphiques -->
-  <div class="charts p-4 bg-gray-800 bg-opacity-80 rounded-lg shadow-lg">
+  <div class="charts p-4 bg-[#1E293B] bg-opacity-80 rounded-lg shadow-lg">
     <h3 class="text-lg font-bold text-yellow-400 mb-4">Affichage des graphiques</h3>
     <div *ngFor="let chart of charts; let i = index" class="chart-container mb-6">
 
       <!-- Conteneur des filtres -->
-      <div class="filters bg-gray-700 p-4 rounded-md mb-4 max-w-4xl mx-auto">
+      <div class="filters bg-[#111827] p-4 rounded-md mb-4 max-w-4xl mx-auto">
         <div class="flex flex-col md:flex-row items-center justify-between">
           <div class="flex items-center space-x-4">
             <label for="season" class="text-gray-300">Saison :</label>
-            <select [(ngModel)]="chart.selectedSeason" (change)="updateChart(i)" class="bg-gray-600 text-white rounded px-3 py-2">
+            <select
+              [(ngModel)]="chart.selectedSeason"
+              (change)="updateChart(i)"
+              class="bg-gray-600 text-white rounded px-3 py-2
+                     focus:outline-none focus:ring-4 focus:ring-blue-300"
+            >
               <option *ngFor="let season of seasons" [value]="season">{{ season }}</option>
             </select>
           </div>
           <div class="flex items-center space-x-4 mt-4 md:mt-0">
             <label for="statType" class="text-gray-300">Type de statistique :</label>
-            <select [(ngModel)]="chart.selectedStatType" (change)="updateChart(i)" class="bg-gray-600 text-white rounded px-3 py-2">
+            <select
+              [(ngModel)]="chart.selectedStatType"
+              (change)="updateChart(i)"
+              class="bg-gray-600 text-white rounded px-3 py-2
+                     focus:outline-none focus:ring-4 focus:ring-blue-300"
+            >
               <option *ngFor="let type of statTypes" [value]="type.route">{{ type.label }}</option>
             </select>
           </div>
@@ -88,7 +139,7 @@
       </div>
 
       <!-- Conteneur du graphique -->
-      <div class="chart-display bg-gray-700 p-6 rounded-md shadow-lg max-w-5xl mx-auto">
+      <div class="chart-display bg-[#111827] p-6 rounded-md shadow-lg max-w-5xl mx-auto">
         <div *ngIf="!chart.chartData" class="text-white text-center">
           <p>Sélectionnez une saison et un type de statistique pour afficher un graphique.</p>
         </div>
@@ -99,27 +150,35 @@
             [xaxis]="chart.chartData.xaxis"
             [plotOptions]="chart.chartData.plotOptions"
             [yaxis]="chart.chartData.yaxis"
-            style="width: 100%; height: 500px;">
+            style="width: 100%; height: 500px;"
+          >
           </apx-chart>
         </div>
       </div>
 
       <!-- Bouton pour supprimer un graphique -->
-      <button (click)="removeChart(i)" class="mt-4 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow">
+      <button
+        (click)="removeChart(i)"
+        class="
+              mt-4 bg-red-500 hover:bg-red-600 text-white 
+              px-2 py-1 text-sm
+              md:px-4 md:py-2 md:text-base
+              rounded shadow
+              focus:outline-none focus:ring-4 focus:ring-red-300"
+      >
         Ne plus afficher ce graphique
       </button>
     </div>
   </div>
 
-  <!-- Zone de notification -->
+  <!-- Zone de notification (secondaire, si besoin) -->
   <div *ngIf="notificationMessage" class="fixed top-4 right-4 bg-green-500 text-white p-2 rounded shadow-lg z-50">
     {{ notificationMessage }}
   </div>
 
 </div>
 
-
-  <!-- Footer -->
-  <footer class="text-center p-2 bg-gray-800 text-gray-300 w-full">
-    <p>© 2024 VisuStatsFootball - Tous droits réservés.</p>
-  </footer>
+<!-- Footer -->
+<footer class="text-center p-2 bg-[#0A0F1D] text-gray-300 w-full">
+  <p>© 2024 VisuStatsFootball - Tous droits réservés.</p>
+</footer>

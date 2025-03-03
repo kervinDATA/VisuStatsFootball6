@@ -12,20 +12,44 @@
       <div *ngIf="!isLandingPage" class="ml-10">
           <button
               (click)="navigateToHome()"
-              class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 text-sm rounded shadow-md transition duration-300">
+              class="
+                    bg-blue-500 hover:bg-blue-600 text-white 
+                    px-1 py-1 text-sm
+                    md:px-3 md:py-1 md:text-base
+                    rounded shadow-md transition duration-300
+                    focus:outline-none focus:ring-4 focus:ring-blue-300"
+            >
               Retour à l'accueil
           </button>
       </div>
   </div>
-  <nav class="flex gap-2">
-      <!-- Bouton "Register" visible si non connecté -->
-      <button *ngIf="!authService.isLoggedIn()" (click)="goToRegister()" class="px-3 py-1 bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md">Register</button>
-
-      <!-- Bouton "Login" visible si non connecté -->
-      <button *ngIf="!authService.isLoggedIn()" (click)="goToLogin()" class="px-3 py-1 bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md">Login</button>
-
-      <!-- Bouton "Logout" visible si connecté -->
-      <button *ngIf="authService.isLoggedIn()" (click)="logout()" class="px-3 py-1 bg-red-500 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md">Logout</button>
+  <nav class="flex flex-col md:flex-row gap-2">
+    <!-- Bouton "Register" visible si non connecté -->
+    <button
+      *ngIf="!authService.isLoggedIn()"
+      (click)="goToRegister()"
+      class="px-2 py-1 text-sm md:px-3 md:py-1 md:text-base bg-blue-500 hover:bg-blue-700 text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-4 focus:ring-blue-300"
+    >
+      Register
+    </button>
+  
+    <!-- Bouton "Login" visible si non connecté -->
+    <button
+      *ngIf="!authService.isLoggedIn()"
+      (click)="goToLogin()"
+      class="px-2 py-1 text-sm md:px-3 md:py-1 md:text-base bg-green-500 hover:bg-green-700 text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-4 focus:ring-green-300"
+    >
+      Login
+    </button>
+  
+    <!-- Bouton "Logout" visible si connecté -->
+    <button
+      *ngIf="authService.isLoggedIn()"
+      (click)="logout()"
+      class="px-2 py-1 text-sm md:px-3 md:py-1 md:text-base bg-red-500 hover:bg-red-700 text-white font-semibold rounded-lg shadow-md focus:outline-none focus:ring-4 focus:ring-red-300"
+    >
+      Logout
+    </button>
   </nav>
 </header>
 

@@ -1,17 +1,22 @@
-<!-- Wrapper principal avec un fond dégradé -->
-<div class="min-h-screen flex flex-col bg-gradient-to-br from-gray-800 via-gray-700 to-gray-600 text-white">
+<!-- Wrapper principal avec un fond sombre -->
+<div class="min-h-screen flex flex-col bg-[#0A0F1D] text-white">
   <div class="p-4">
 
-
     <!-- Filtre déroulant compact -->
-    <label for="season-select" class="block text-sm font-medium text-gray-300 mb-2">
+    <label
+      for="season-select"
+      class="block text-sm font-medium text-gray-300 mb-2"
+    >
       Sélectionnez une saison :
     </label>
     <select
       id="season-select"
-      class="block w-1/2 px-4 py-2 border border-gray-600 bg-gray-700 text-white rounded-md shadow-sm focus:outline-none focus:ring-yellow-400 focus:border-yellow-400 sm:text-sm mx-auto"
+      class="block w-1/2 px-4 py-2 border border-gray-600 bg-[#1E293B] text-white 
+             rounded-md shadow-sm focus:outline-none focus:ring-4 focus:ring-blue-300 
+             sm:text-sm mx-auto"
       [(ngModel)]="selectedSeasonName"
-      (ngModelChange)="selectSeason($event)">
+      (ngModelChange)="selectSeason($event)"
+    >
       <option value="" disabled [selected]="selectedSeasonName === '2023/2024'">
         Choisissez une saison
       </option>
@@ -22,56 +27,72 @@
 
     <!-- Affichage de la saison sélectionnée -->
     <div class="mt-4 text-gray-300 text-center" *ngIf="selectedSeasonName">
-      Saison sélectionnée : <strong class="text-white">{{ selectedSeasonName }}</strong>
+      Saison sélectionnée : 
+      <strong class="text-white">{{ selectedSeasonName }}</strong>
     </div>
 
     <!-- Première analyse -->
     <div class="mt-12 p-4">
-    <h1 class="text-2xl font-bold text-yellow-400 text-center mb-6">Possession vs Performance</h1>
+      <h1 class="text-2xl font-bold text-yellow-400 text-center mb-6">
+        Possession vs Performance
+      </h1>
 
-    <!-- Graphique 1 -->
-    <div class="mt-8 bg-gray-800 bg-opacity-80 rounded-lg shadow-lg p-6">
-      <apx-chart
-        *ngIf="chartOptionsPossession"
-        [series]="chartOptionsPossession.series"
-        [chart]="chartOptionsPossession.chart"
-        [xaxis]="chartOptionsPossession.xaxis"
-        [yaxis]="chartOptionsPossession.yaxis"
-        [title]="chartOptionsPossession.title">
-      </apx-chart>
-    </div>
+      <!-- Graphique 1 -->
+      <div class="mt-8 bg-[#1E293B] rounded-lg shadow-lg p-6">
+        <apx-chart
+          *ngIf="chartOptionsPossession"
+          [series]="chartOptionsPossession.series"
+          [chart]="chartOptionsPossession.chart"
+          [xaxis]="chartOptionsPossession.xaxis"
+          [yaxis]="chartOptionsPossession.yaxis"
+          [title]="chartOptionsPossession.title"
+        >
+        </apx-chart>
+      </div>
 
-    <!-- Texte d'analyse pour la première analyse -->
-    <div class="mt-8 p-4 bg-gray-700 rounded-lg shadow">
-      <h2 class="text-xl font-bold text-yellow-400 text-center mb-4">Analyse</h2>
-      <p class="text-gray-300 leading-relaxed">
-        Les données révèlent une tendance intéressante : les deux premières équipes du championnat, quelle que soit la saison, affichent généralement une possession de balle élevée, oscillant entre 
-        <strong class="text-white">60% et 70%</strong>. Cela semble confirmer une corrélation entre un style de jeu basé sur la maîtrise du ballon et les performances au classement.
-      </p>
-      <!-- Autres paragraphes d'analyse -->
+      <!-- Texte d'analyse pour la première analyse -->
+      <div class="mt-8 p-4 bg-[#111827] rounded-lg shadow">
+        <h2 class="text-xl font-bold text-yellow-400 text-center mb-4">Analyse</h2>
+        <p class="text-gray-300 leading-relaxed">
+          Les données révèlent une tendance intéressante : les deux premières équipes 
+          du championnat, quelle que soit la saison, affichent généralement une possession 
+          de balle élevée, oscillant entre 
+          <strong class="text-white">60% et 70%</strong>. Cela semble confirmer une 
+          corrélation entre un style de jeu basé sur la maîtrise du ballon et les 
+          performances au classement.
+        </p>
+        <!-- Autres paragraphes d'analyse -->
+      </div>
     </div>
 
     <!-- Deuxième analyse -->
     <div class="mt-12 p-4">
-      <h1 class="text-2xl font-bold text-yellow-400 text-center mb-6">Dangerous Attacks & Goals</h1>
+      <h1 class="text-2xl font-bold text-yellow-400 text-center mb-6">
+        Dangerous Attacks & Goals
+      </h1>
 
       <!-- Graphique 2 -->
-      <div class="mt-8 bg-gray-800 bg-opacity-80 rounded-lg shadow-lg p-6">
+      <div class="mt-8 bg-[#1E293B] rounded-lg shadow-lg p-6">
         <apx-chart
           *ngIf="chartOptionsDangerousAttacks"
           [series]="chartOptionsDangerousAttacks.series"
           [chart]="chartOptionsDangerousAttacks.chart"
           [xaxis]="chartOptionsDangerousAttacks.xaxis"
           [yaxis]="chartOptionsDangerousAttacks.yaxis"
-          [title]="chartOptionsDangerousAttacks.title">
+          [title]="chartOptionsDangerousAttacks.title"
+        >
         </apx-chart>
       </div>
 
       <!-- Texte d'analyse pour la deuxième analyse -->
-      <div class="mt-8 p-4 bg-gray-700 rounded-lg shadow">
+      <div class="mt-8 p-4 bg-[#111827] rounded-lg shadow">
         <h2 class="text-xl font-bold text-yellow-400 text-center mb-4">Analyse</h2>
         <p class="text-gray-300 leading-relaxed">
-          Les données mettent en lumière une tendance marquante : les deux premières équipes du classement, quelle que soit la saison, se démarquent non seulement par un nombre élevé d’attaques dangereuses, mais aussi par une excellente capacité à convertir ces actions en buts. Cela souligne leur efficacité offensive, un facteur clé de leur succès.
+          Les données mettent en lumière une tendance marquante : les deux premières 
+          équipes du classement, quelle que soit la saison, se démarquent non seulement 
+          par un nombre élevé d’attaques dangereuses, mais aussi par une excellente 
+          capacité à convertir ces actions en buts. Cela souligne leur efficacité 
+          offensive, un facteur clé de leur succès.
         </p>
         <!-- Autres paragraphes d'analyse -->
       </div>
@@ -79,57 +100,79 @@
 
     <!-- Troisième analyse -->
     <div class="mt-12 p-4">
-      <h1 class="text-2xl font-bold text-yellow-400 text-center mb-6">Scoring Minutes Distribution</h1>
+      <h1 class="text-2xl font-bold text-yellow-400 text-center mb-6">
+        Scoring Minutes Distribution
+      </h1>
 
       <!-- Graphiques circulaires -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
         <!-- Graphique Celtic -->
-        <div class="p-4 bg-gray-800 bg-opacity-80 rounded-lg shadow">
+        <div class="p-4 bg-[#1E293B] rounded-lg shadow">
           <h3 class="text-lg font-bold text-yellow-400 text-center mb-4">Celtic</h3>
           <apx-chart
             *ngIf="chartOptionsCeltic"
             [series]="chartOptionsCeltic.series"
             [chart]="chartOptionsCeltic.chart"
             [labels]="chartOptionsCeltic.labels"
-            [title]="chartOptionsCeltic.title">
+            [title]="chartOptionsCeltic.title"
+          >
           </apx-chart>
         </div>
 
         <!-- Graphique Rangers -->
-        <div class="p-4 bg-gray-800 bg-opacity-80 rounded-lg shadow">
+        <div class="p-4 bg-[#1E293B] rounded-lg shadow">
           <h3 class="text-lg font-bold text-yellow-400 text-center mb-4">Rangers</h3>
           <apx-chart
             *ngIf="chartOptionsRangers"
             [series]="chartOptionsRangers.series"
             [chart]="chartOptionsRangers.chart"
             [labels]="chartOptionsRangers.labels"
-            [title]="chartOptionsRangers.title">
+            [title]="chartOptionsRangers.title"
+          >
           </apx-chart>
         </div>
       </div>
 
       <!-- Texte d'analyse pour la troisième analyse -->
-      <div class="mt-8 p-4 bg-gray-700 rounded-lg shadow">
+      <div class="mt-8 p-4 bg-[#111827] rounded-lg shadow">
         <h2 class="text-xl font-bold text-yellow-400 text-center mb-4">Analyse</h2>
         <p class="text-gray-300 leading-relaxed">
-          Les données révèlent une tendance marquante : la majorité des buts marqués par <strong>Celtic</strong> et <strong>Rangers</strong> se concentre dans le dernier quart d'heure des matchs, entre la <strong>75ᵉ et la 90ᵉ minute</strong>. Cette observation soulève des questions intéressantes sur le style de jeu et les dynamiques de ces deux équipes.
+          Les données révèlent une tendance marquante : la majorité des buts marqués 
+          par <strong>Celtic</strong> et <strong>Rangers</strong> se concentre dans 
+          le dernier quart d'heure des matchs, entre la <strong>75ᵉ et la 90ᵉ minute</strong>. 
+          Cette observation soulève des questions intéressantes sur le style de jeu et 
+          les dynamiques de ces deux équipes.
         </p>
         <p class="text-gray-300 leading-relaxed mt-4">
-          Depuis plusieurs années, <strong>Celtic</strong> et <strong>Rangers</strong> occupent systématiquement les <strong>premières places du classement</strong>. Cette domination pousse leurs adversaires à adopter des stratégies <strong>ultra-défensives</strong>, cherchant à limiter les espaces et les occasions de but. Cependant, la <strong>possession de balle élevée</strong> et le <strong>rythme imposé</strong> par ces deux équipes semblent épuiser leurs opposants au fil du match.
+          Depuis plusieurs années, <strong>Celtic</strong> et <strong>Rangers</strong> 
+          occupent systématiquement les <strong>premières places du classement</strong>. 
+          Cette domination pousse leurs adversaires à adopter des stratégies 
+          <strong>ultra-défensives</strong>, cherchant à limiter les espaces et les 
+          occasions de but. Cependant, la <strong>possession de balle élevée</strong> 
+          et le <strong>rythme imposé</strong> par ces deux équipes semblent épuiser 
+          leurs opposants au fil du match.
         </p>
         <p class="text-gray-300 leading-relaxed mt-4">
-          En conséquence, le dernier quart d'heure devient souvent décisif. Lorsque les défenses adverses commencent à fléchir sous la fatigue, les actions offensives de <strong>Celtic</strong> et <strong>Rangers</strong> trouvent plus facilement le chemin des filets. Cela souligne leur capacité à <strong>maintenir un niveau d'intensité élevé tout au long du match</strong> et à capitaliser sur les faiblesses physiques ou tactiques de leurs adversaires en fin de rencontre.
+          En conséquence, le dernier quart d'heure devient souvent décisif. Lorsque 
+          les défenses adverses commencent à fléchir sous la fatigue, les actions 
+          offensives de <strong>Celtic</strong> et <strong>Rangers</strong> trouvent 
+          plus facilement le chemin des filets. Cela souligne leur capacité à 
+          <strong>maintenir un niveau d'intensité élevé</strong> tout au long du 
+          match et à capitaliser sur les faiblesses physiques ou tactiques de leurs 
+          adversaires en fin de rencontre.
         </p>
         <p class="text-gray-300 leading-relaxed mt-4">
-          Ces données renforcent l'idée que l’endurance et la patience sont des éléments clés dans la stratégie de ces équipes dominantes, qui savent exploiter le temps comme un allié pour concrétiser leur supériorité sur le terrain.
+          Ces données renforcent l'idée que l’endurance et la patience sont des 
+          éléments clés dans la stratégie de ces équipes dominantes, qui savent 
+          exploiter le temps comme un allié pour concrétiser leur supériorité 
+          sur le terrain.
         </p>
       </div>
     </div>
   </div>
 </div>
 
-
 <!-- Footer -->
-<footer class="text-center p-2 bg-gray-800 text-gray-300 w-full">
+<footer class="text-center p-2 bg-[#0A0F1D] text-gray-300 w-full">
   <p>© 2024 VisuStatsFootball - Tous droits réservés.</p>
 </footer>
